@@ -32,6 +32,14 @@
 #endif /* CONFIG_CPU_THERMAL_IPA */
 #include "gpu_custom_interface.h"
 
+#ifdef CONFIG_SOC_EXYNOS9820
+#define GPU_MAX_VOLT		1000000
+#define GPU_MIN_VOLT		500000
+#define GPU_VOLT_STEP		6250
+#else
+#error "Please define gpu voltage ranges for current SoC."
+#endif
+
 #ifdef CONFIG_MALI_RT_PM
 #include <soc/samsung/exynos-pd.h>
 #endif
@@ -436,6 +444,331 @@ static ssize_t set_governor(struct device *dev, struct device_attribute *attr, c
 				"%s: fail to set the new governor (%d)\n", __func__, next_governor_type);
 		return -ENOENT;
 	}
+
+	return count;
+}
+
+static ssize_t show_gpu_custom_max_clock(struct device *dev, struct device_attribute *attr, char *buf)
+{
+	ssize_t ret = 0;
+	struct exynos_context *platform = (struct exynos_context *)pkbdev->platform_context;
+
+	if (!platform)
+		return -ENODEV;
+
+	ret += snprintf(buf+ret, PAGE_SIZE-ret, "%d", platform->gpu_max_clock);
+
+	if (ret < PAGE_SIZE - 1) {
+		ret += snprintf(buf+ret, PAGE_SIZE-ret, "\n");
+	} else {
+		buf[PAGE_SIZE-2] = '\n';
+		buf[PAGE_SIZE-1] = '\0';
+		ret = PAGE_SIZE-1;
+	}
+
+	return ret;
+}
+
+static ssize_t set_gpu_custom_max_clock(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+	int ret, gpu_max_clock;
+	struct exynos_context *platform = (struct exynos_context *)pkbdev->platform_context;
+
+	if (!platform)
+		return -ENODEV;
+
+	ret = kstrtoint(buf, 0, &gpu_max_clock);
+
+	if (ret) {
+		GPU_LOG(DVFS_WARNING, DUMMY, 0u, 0u, "%s: invalid value\n", __func__);
+		return -ENOENT;
+	}
+
+	if ((gpu_max_clock < platform->gpu_min_clock_limit) || (gpu_max_clock > platform->gpu_max_clock_limit)) {
+		GPU_LOG(DVFS_WARNING, DUMMY, 0u, 0u, "%s: out of range (%d)\n", __func__, gpu_max_clock);
+		return -ENOENT;
+	}
+
+	platform->gpu_max_clock = gpu_max_clock;
+	platform->user_max_lock_input = 0;
+	gpu_dvfs_clock_lock(GPU_DVFS_MAX_UNLOCK, SYSFS_LOCK, 0);
+
+
+	return count;
+}
+
+static ssize_t show_gpu_custom_min_clock(struct device *dev, struct device_attribute *attr, char *buf)
+{
+	ssize_t ret = 0;
+	struct exynos_context *platform = (struct exynos_context *)pkbdev->platform_context;
+
+	if (!platform)
+		return -ENODEV;
+
+	ret += snprintf(buf+ret, PAGE_SIZE-ret, "%d", platform->gpu_min_clock);
+
+	if (ret < PAGE_SIZE - 1) {
+		ret += snprintf(buf+ret, PAGE_SIZE-ret, "\n");
+	} else {
+		buf[PAGE_SIZE-2] = '\n';
+		buf[PAGE_SIZE-1] = '\0';
+		ret = PAGE_SIZE-1;
+	}
+
+	return ret;
+}
+
+static ssize_t set_gpu_custom_min_clock(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+	int ret, gpu_min_clock;
+	struct exynos_context *platform = (struct exynos_context *)pkbdev->platform_context;
+
+	if (!platform)
+		return -ENODEV;
+
+	ret = kstrtoint(buf, 0, &gpu_min_clock);
+
+	if (ret) {
+		GPU_LOG(DVFS_WARNING, DUMMY, 0u, 0u, "%s: invalid value\n", __func__);
+		return -ENOENT;
+	}
+
+	if ((gpu_min_clock < platform->gpu_min_clock_limit) || (gpu_min_clock > platform->gpu_max_clock_limit)) {
+		GPU_LOG(DVFS_WARNING, DUMMY, 0u, 0u, "%s: out of range (%d)\n", __func__, gpu_min_clock);
+		return -ENOENT;
+	}
+
+	platform->gpu_min_clock = gpu_min_clock;
+
+	return count;
+}
+
+static ssize_t show_gpu_throttling1(struct device *dev, struct device_attribute *attr, char *buf)
+{
+	ssize_t ret = 0;
+	struct exynos_context *platform = (struct exynos_context *)pkbdev->platform_context;
+
+	if (!platform)
+		return -ENODEV;
+
+	ret += snprintf(buf+ret, PAGE_SIZE-ret, "%d", platform->tmu_lock_clk[THROTTLING1]);
+
+	if (ret < PAGE_SIZE - 1) {
+		ret += snprintf(buf+ret, PAGE_SIZE-ret, "\n");
+	} else {
+		buf[PAGE_SIZE-2] = '\n';
+		buf[PAGE_SIZE-1] = '\0';
+		ret = PAGE_SIZE-1;
+	}
+
+	return ret;
+}
+
+static ssize_t set_gpu_throttling1(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+	int ret, throttling1;
+	struct exynos_context *platform = (struct exynos_context *)pkbdev->platform_context;
+
+	if (!platform)
+		return -ENODEV;
+
+	ret = kstrtoint(buf, 0, &throttling1);
+
+	if (ret) {
+		GPU_LOG(DVFS_WARNING, DUMMY, 0u, 0u, "%s: invalid value\n", __func__);
+		return -ENOENT;
+	}
+
+	if ((throttling1 < platform->gpu_min_clock_limit) || (throttling1 > platform->gpu_max_clock_limit)) {
+		GPU_LOG(DVFS_WARNING, DUMMY, 0u, 0u, "%s: out of range (%d)\n", __func__, throttling1);
+		return -ENOENT;
+	}
+
+	platform->tmu_lock_clk[THROTTLING1] = throttling1;
+
+	return count;
+}
+
+static ssize_t show_gpu_throttling2(struct device *dev, struct device_attribute *attr, char *buf)
+{
+	ssize_t ret = 0;
+	struct exynos_context *platform = (struct exynos_context *)pkbdev->platform_context;
+
+	if (!platform)
+		return -ENODEV;
+
+	ret += snprintf(buf+ret, PAGE_SIZE-ret, "%d", platform->tmu_lock_clk[THROTTLING2]);
+
+	if (ret < PAGE_SIZE - 1) {
+		ret += snprintf(buf+ret, PAGE_SIZE-ret, "\n");
+	} else {
+		buf[PAGE_SIZE-2] = '\n';
+		buf[PAGE_SIZE-1] = '\0';
+		ret = PAGE_SIZE-1;
+	}
+
+	return ret;
+}
+
+static ssize_t set_gpu_throttling2(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+	int ret, throttling2;
+	struct exynos_context *platform = (struct exynos_context *)pkbdev->platform_context;
+
+	if (!platform)
+		return -ENODEV;
+
+	ret = kstrtoint(buf, 0, &throttling2);
+
+	if (ret) {
+		GPU_LOG(DVFS_WARNING, DUMMY, 0u, 0u, "%s: invalid value\n", __func__);
+		return -ENOENT;
+	}
+
+	if ((throttling2 < platform->gpu_min_clock_limit) || (throttling2 > platform->gpu_max_clock_limit)) {
+		GPU_LOG(DVFS_WARNING, DUMMY, 0u, 0u, "%s: out of range (%d)\n", __func__, throttling2);
+		return -ENOENT;
+	}
+
+	platform->tmu_lock_clk[THROTTLING2] = throttling2;
+
+	return count;
+}
+
+static ssize_t show_gpu_throttling3(struct device *dev, struct device_attribute *attr, char *buf)
+{
+	ssize_t ret = 0;
+	struct exynos_context *platform = (struct exynos_context *)pkbdev->platform_context;
+
+	if (!platform)
+		return -ENODEV;
+
+	ret += snprintf(buf+ret, PAGE_SIZE-ret, "%d", platform->tmu_lock_clk[THROTTLING3]);
+
+	if (ret < PAGE_SIZE - 1) {
+		ret += snprintf(buf+ret, PAGE_SIZE-ret, "\n");
+	} else {
+		buf[PAGE_SIZE-2] = '\n';
+		buf[PAGE_SIZE-1] = '\0';
+		ret = PAGE_SIZE-1;
+	}
+
+	return ret;
+}
+
+static ssize_t set_gpu_throttling3(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+	int ret, throttling3;
+	struct exynos_context *platform = (struct exynos_context *)pkbdev->platform_context;
+
+	if (!platform)
+		return -ENODEV;
+
+	ret = kstrtoint(buf, 0, &throttling3);
+
+	if (ret) {
+		GPU_LOG(DVFS_WARNING, DUMMY, 0u, 0u, "%s: invalid value\n", __func__);
+		return -ENOENT;
+	}
+
+	if ((throttling3 < platform->gpu_min_clock_limit) || (throttling3 > platform->gpu_max_clock_limit)) {
+		GPU_LOG(DVFS_WARNING, DUMMY, 0u, 0u, "%s: out of range (%d)\n", __func__, throttling3);
+		return -ENOENT;
+	}
+
+	platform->tmu_lock_clk[THROTTLING3] = throttling3;
+
+	return count;
+}
+
+static ssize_t show_gpu_throttling4(struct device *dev, struct device_attribute *attr, char *buf)
+{
+	ssize_t ret = 0;
+	struct exynos_context *platform = (struct exynos_context *)pkbdev->platform_context;
+
+	if (!platform)
+		return -ENODEV;
+
+	ret += snprintf(buf+ret, PAGE_SIZE-ret, "%d", platform->tmu_lock_clk[THROTTLING4]);
+
+	if (ret < PAGE_SIZE - 1) {
+		ret += snprintf(buf+ret, PAGE_SIZE-ret, "\n");
+	} else {
+		buf[PAGE_SIZE-2] = '\n';
+		buf[PAGE_SIZE-1] = '\0';
+		ret = PAGE_SIZE-1;
+	}
+
+	return ret;
+}
+
+static ssize_t set_gpu_throttling4(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+	int ret, throttling4;
+	struct exynos_context *platform = (struct exynos_context *)pkbdev->platform_context;
+
+	if (!platform)
+		return -ENODEV;
+
+	ret = kstrtoint(buf, 0, &throttling4);
+
+	if (ret) {
+		GPU_LOG(DVFS_WARNING, DUMMY, 0u, 0u, "%s: invalid value\n", __func__);
+		return -ENOENT;
+	}
+
+	if ((throttling4 < platform->gpu_min_clock_limit) || (throttling4 > platform->gpu_max_clock_limit)) {
+		GPU_LOG(DVFS_WARNING, DUMMY, 0u, 0u, "%s: out of range (%d)\n", __func__, throttling4);
+		return -ENOENT;
+	}
+
+	platform->tmu_lock_clk[THROTTLING4] = throttling4;
+
+	return count;
+}
+
+static ssize_t show_gpu_tripping(struct device *dev, struct device_attribute *attr, char *buf)
+{
+	ssize_t ret = 0;
+	struct exynos_context *platform = (struct exynos_context *)pkbdev->platform_context;
+
+	if (!platform)
+		return -ENODEV;
+
+	ret += snprintf(buf+ret, PAGE_SIZE-ret, "%d", platform->tmu_lock_clk[TRIPPING]);
+
+	if (ret < PAGE_SIZE - 1) {
+		ret += snprintf(buf+ret, PAGE_SIZE-ret, "\n");
+	} else {
+		buf[PAGE_SIZE-2] = '\n';
+		buf[PAGE_SIZE-1] = '\0';
+		ret = PAGE_SIZE-1;
+	}
+
+	return ret;
+}
+
+static ssize_t set_gpu_tripping(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+	int ret, tripping;
+	struct exynos_context *platform = (struct exynos_context *)pkbdev->platform_context;
+
+	if (!platform)
+		return -ENODEV;
+
+	ret = kstrtoint(buf, 0, &tripping);
+
+	if (ret) {
+		GPU_LOG(DVFS_WARNING, DUMMY, 0u, 0u, "%s: invalid value\n", __func__);
+		return -ENOENT;
+	}
+
+	if ((tripping < platform->gpu_min_clock_limit) || (tripping > platform->gpu_max_clock_limit)) {
+		GPU_LOG(DVFS_WARNING, DUMMY, 0u, 0u, "%s: out of range (%d)\n", __func__, tripping);
+		return -ENOENT;
+	}
+
+	platform->tmu_lock_clk[TRIPPING] = tripping;
 
 	return count;
 }
