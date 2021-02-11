@@ -19,8 +19,6 @@
 
 #include <linux/fb.h>
 
-#include <linux/sysfs_helpers.h>
-
 #if defined(CONFIG_MALI_DVFS) && defined(CONFIG_EXYNOS_THERMAL) && defined(CONFIG_GPU_THERMAL)
 #include "exynos_tmu.h"
 #endif
@@ -33,14 +31,6 @@
 #include "gpu_ipa.h"
 #endif /* CONFIG_CPU_THERMAL_IPA */
 #include "gpu_custom_interface.h"
-
-#ifdef CONFIG_SOC_EXYNOS9820
-#define GPU_MAX_VOLT		1000000
-#define GPU_MIN_VOLT		500000
-#define GPU_VOLT_STEP		6250
-#else
-#error "Please define gpu voltage ranges for current SoC."
-#endif
 
 #ifdef CONFIG_MALI_RT_PM
 #include <soc/samsung/exynos-pd.h>
