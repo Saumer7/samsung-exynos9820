@@ -19,6 +19,8 @@
 
 #include <linux/fb.h>
 
+#include <linux/sysfs_helpers.h>
+
 #if defined(CONFIG_MALI_DVFS) && defined(CONFIG_EXYNOS_THERMAL) && defined(CONFIG_GPU_THERMAL)
 #include "exynos_tmu.h"
 #endif
@@ -31,6 +33,14 @@
 #include "gpu_ipa.h"
 #endif /* CONFIG_CPU_THERMAL_IPA */
 #include "gpu_custom_interface.h"
+
+#ifdef CONFIG_SOC_EXYNOS9820
+#define GPU_MAX_VOLT		1000000
+#define GPU_MIN_VOLT		500000
+#define GPU_VOLT_STEP		6250
+#else
+#error "Please define gpu voltage ranges for current SoC."
+#endif
 
 #ifdef CONFIG_MALI_RT_PM
 #include <soc/samsung/exynos-pd.h>
@@ -208,7 +218,7 @@ static int gpu_get_asv_table(struct exynos_context *platform, char *buf, size_t 
 
 	cnt += snprintf(buf+cnt, buf_size-cnt, "GPU, vol, min, max, down_stay, mif, cpu0, cpu1\n");
 
-	for (i = gpu_dvfs_get_level(platform->gpu_max_clock); i <= gpu_dvfs_get_level(platform->gpu_min_clock); i++) {
+	for (i = gpu_dvfs_get_level(platform->gpu_max_clock_limit); i <= gpu_dvfs_get_level(platform->gpu_min_clock); i++) {
 		cnt += snprintf(buf+cnt, buf_size-cnt, "%d, %7d, %2d, %3d, %d, %7d, %7d, %7d\n",
 		platform->table[i].clock, platform->table[i].voltage, platform->table[i].min_threshold,
 		platform->table[i].max_threshold, platform->table[i].down_staycount, platform->table[i].mem_freq,
