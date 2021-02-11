@@ -2456,7 +2456,6 @@ void gpu_remove_sysfs_file(struct device *dev)
 	device_remove_file(dev, &dev_attr_vol);
 	device_remove_file(dev, &dev_attr_power_state);
 	device_remove_file(dev, &dev_attr_asv_table);
-	device_remove_file(dev, &dev_attr_volt_table);
 	device_remove_file(dev, &dev_attr_dvfs_table);
 	device_remove_file(dev, &dev_attr_time_in_state);
 	device_remove_file(dev, &dev_attr_utilization);
@@ -2474,13 +2473,6 @@ void gpu_remove_sysfs_file(struct device *dev)
 	device_remove_file(dev, &dev_attr_highspeed_delay);
 	device_remove_file(dev, &dev_attr_wakeup_lock);
 	device_remove_file(dev, &dev_attr_polling_speed);
-	device_remove_file(dev, &dev_attr_max_clock);
-	device_remove_file(dev, &dev_attr_min_clock);
-	device_remove_file(dev, &dev_attr_throttling1);
-	device_remove_file(dev, &dev_attr_throttling2);
-	device_remove_file(dev, &dev_attr_throttling3);
-	device_remove_file(dev, &dev_attr_throttling4);
-	device_remove_file(dev, &dev_attr_tripping);
 	device_remove_file(dev, &dev_attr_tmu);
 #ifdef CONFIG_CPU_THERMAL_IPA
 	device_remove_file(dev, &dev_attr_norm_utilization);
