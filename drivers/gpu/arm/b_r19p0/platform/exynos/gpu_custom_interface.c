@@ -1891,9 +1891,6 @@ static struct kobj_attribute gpu_available_governor_attribute =
 static struct kobj_attribute gpu_model_attribute =
 	__ATTR(gpu_model, S_IRUGO, show_kernel_sysfs_gpu_model, NULL);
 
-static struct kobj_attribute gpu_volt_attribute =
-	__ATTR(gpu_volt, S_IRUGO, show_kernel_sysfs_gpu_volt, NULL);
-
 static struct attribute *attrs[] = {
 #ifdef CONFIG_MALI_DVFS
 #if defined(CONFIG_EXYNOS_THERMAL) && defined(CONFIG_GPU_THERMAL)
@@ -1911,6 +1908,7 @@ static struct attribute *attrs[] = {
 	&gpu_available_governor_attribute.attr,
 #endif /* #ifdef CONFIG_MALI_DVFS */
 	&gpu_model_attribute.attr,
+	&gpu_volt_attribute.attr,
 	NULL,
 };
 
