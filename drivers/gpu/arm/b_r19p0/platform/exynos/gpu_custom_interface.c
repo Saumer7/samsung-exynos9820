@@ -1981,6 +1981,8 @@ static struct kobj_attribute gpu_available_governor_attribute =
 static struct kobj_attribute gpu_model_attribute =
 	__ATTR(gpu_model, S_IRUGO, show_kernel_sysfs_gpu_model, NULL);
 
+static struct kobj_attribute gpu_volt_attribute =
+	__ATTR(gpu_volt, S_IRUGO, show_kernel_sysfs_gpu_volt, NULL);
 
 static struct attribute *attrs[] = {
 #ifdef CONFIG_MALI_DVFS
