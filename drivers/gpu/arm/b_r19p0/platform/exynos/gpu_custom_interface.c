@@ -1943,9 +1943,6 @@ int gpu_create_sysfs_file(struct device *dev)
 		goto out;
 	}
 
-	if (device_create_file(dev, &dev_attr_volt_table)) {
-		GPU_LOG(DVFS_ERROR, DUMMY, 0u, 0u, "couldn't create sysfs file [volt_table]\n");
-		goto out;
 	}
 
 	if (device_create_file(dev, &dev_attr_dvfs_table)) {
@@ -2118,6 +2115,7 @@ void gpu_remove_sysfs_file(struct device *dev)
 	device_remove_file(dev, &dev_attr_vol);
 	device_remove_file(dev, &dev_attr_power_state);
 	device_remove_file(dev, &dev_attr_asv_table);
+	device_remove_file(dev, &dev_attr_volt_table);
 	device_remove_file(dev, &dev_attr_dvfs_table);
 	device_remove_file(dev, &dev_attr_time_in_state);
 	device_remove_file(dev, &dev_attr_utilization);
