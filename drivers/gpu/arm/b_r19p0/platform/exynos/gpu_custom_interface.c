@@ -1440,6 +1440,7 @@ DEVICE_ATTR(clock, S_IRUGO|S_IWUSR, show_clock, set_clock);
 DEVICE_ATTR(vol, S_IRUGO, show_vol, NULL);
 DEVICE_ATTR(power_state, S_IRUGO, show_power_state, NULL);
 DEVICE_ATTR(asv_table, S_IRUGO, show_asv_table, NULL);
+DEVICE_ATTR(volt_table, S_IRUGO|S_IWUSR, show_volt_table, set_volt_table);
 DEVICE_ATTR(dvfs_table, S_IRUGO, show_dvfs_table, NULL);
 DEVICE_ATTR(time_in_state, S_IRUGO|S_IWUSR, show_time_in_state, set_time_in_state);
 DEVICE_ATTR(utilization, S_IRUGO, show_utilization, NULL);
