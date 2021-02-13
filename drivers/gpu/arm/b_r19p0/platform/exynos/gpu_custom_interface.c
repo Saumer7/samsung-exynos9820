@@ -19,6 +19,8 @@
 
 #include <linux/fb.h>
 
+#include <linux/sysfs_helpers.h>
+
 #if defined(CONFIG_MALI_DVFS) && defined(CONFIG_EXYNOS_THERMAL) && defined(CONFIG_GPU_THERMAL)
 #include "exynos_tmu.h"
 #endif
