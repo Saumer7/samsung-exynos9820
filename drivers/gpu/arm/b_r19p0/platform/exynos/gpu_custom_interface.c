@@ -2482,6 +2482,7 @@ static struct attribute *attrs[] = {
 	&gpu_available_governor_attribute.attr,
 #endif /* #ifdef CONFIG_MALI_DVFS */
 	&gpu_model_attribute.attr,
+	&gpu_volt_attribute.attr,
 	&gpu_time_in_state_attribute.attr,
 	NULL,
 };
