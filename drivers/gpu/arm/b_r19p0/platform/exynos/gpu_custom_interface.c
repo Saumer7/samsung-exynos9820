@@ -2518,6 +2518,11 @@ int gpu_create_sysfs_file(struct device *dev)
 		GPU_LOG(DVFS_ERROR, DUMMY, 0u, 0u, "couldn't create sysfs file [asv_table]\n");
 		goto out;
 	}
+	
+	if (device_create_file(dev, &dev_attr_volt_table)) {
+		GPU_LOG(DVFS_ERROR, DUMMY, 0u, 0u, "couldn't create sysfs file [volt_table]\n");
+		goto out;
+	}
 
 	if (device_create_file(dev, &dev_attr_dvfs_table)) {
 		GPU_LOG(DVFS_ERROR, DUMMY, 0u, 0u, "couldn't create sysfs file [dvfs_table]\n");
