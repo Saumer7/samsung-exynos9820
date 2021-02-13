@@ -19,8 +19,6 @@
 
 #include <linux/fb.h>
 
-#include <linux/sysfs_helpers.h>
-
 #if defined(CONFIG_MALI_DVFS) && defined(CONFIG_EXYNOS_THERMAL) && defined(CONFIG_GPU_THERMAL)
 #include "exynos_tmu.h"
 #endif
@@ -247,6 +245,28 @@ static ssize_t show_asv_table(struct device *dev, struct device_attribute *attr,
 	}
 
 	return ret;
+}
+
+static ssize_t show_volt_table(struct device *dev, struct device_attribute *attr, char *buf)
+{
+	struct exynos_context *platform = (struct exynos_context *)pkbdev->platform_context;
+	ssize_t count = 0, pr_len;
+	int i, max, min;
+
+	if (!platform)
+		return -ENODEV;
+
+	max = gpu_dvfs_get_level(platform->gpu_max_clock_limit);
+	min = gpu_dvfs_get_level(platform->gpu_min_clock_limit);
+	pr_len = (size_t)((PAGE_SIZE - 2) / (min-max));
+
+	for (i = max; i <= min; i++) {
+		count += snprintf(&buf[count], pr_len, "%d %d\n", 
+				platform->table[i].clock,
+				platform->table[i].voltage);
+	}
+
+	return count;
 }
 
 static int gpu_get_dvfs_table(struct exynos_context *platform, char *buf, size_t buf_size)
