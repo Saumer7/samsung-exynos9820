@@ -89,7 +89,13 @@ static inline void cpu_load_update_active(struct rq *this_rq) { }
 #ifdef CONFIG_64BIT
 # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT + SCHED_FIXEDPOINT_SHIFT)
 # define scale_load(w)		((w) << SCHED_FIXEDPOINT_SHIFT)
-# define scale_load_down(w)	((w) >> SCHED_FIXEDPOINT_SHIFT)
+# define scale_load_down(w) \
+({ \
+	unsigned long __w = (w); \
+	if (__w) \
+		__w = max(2UL, __w >> SCHED_FIXEDPOINT_SHIFT); \
+	__w; \
+})
 #else
 # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT)
 # define scale_load(w)		(w)
@@ -2179,6 +2185,23 @@ struct _eenv_debug {
 	unsigned long cpu_util[1];
 };
 #endif
+
+/* EAS governors */
+#ifdef CONFIG_SMP
+struct sched_walt_cpu_load {
+	unsigned long prev_window_util;
+	unsigned long nl;
+	unsigned long pl;
+	u64 ws;
+};
+#endif
+
+#ifdef CONFIG_SCHED_WALT
+extern unsigned long
+boosted_cpu_util(int cpu, unsigned long other_util);
+#endif
+
+
 
 struct eenv_cpu {
 	/* CPU ID, must be in cpus_mask */
