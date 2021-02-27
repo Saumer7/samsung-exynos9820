@@ -23,10 +23,10 @@ jobs:
                      model=${{ matrix.model }} \
                      name="Cruel-V3.10experi"  \
                      toolchain=$TOOLCHAIN      \
-                     +magisk                   \
+                     +magisk=v21.4             \
                      +dtb                      \
                      +always_permit            \
-                     +25hz                     \
+                     +50hz                     \
                      +fp_boost                 \
                      +noatime                  \
                      +simple_lmk               \
