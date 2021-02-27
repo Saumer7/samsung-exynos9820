@@ -26,7 +26,6 @@ jobs:
                      +magisk=v21.4             \
                      +dtb                      \
                      +always_permit            \
-                     +50hz                     \
                      +fp_boost                 \
                      +noatime                  \
                      +simple_lmk               \
