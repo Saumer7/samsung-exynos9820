@@ -3,7 +3,7 @@ name: Build
 on: [push]
 
 env:
-  TOOLCHAIN: cruel
+  TOOLCHAIN: proton210123
   INSTALLER: yes
 
 jobs:
@@ -46,7 +46,6 @@ jobs:
                      +morosound                \
                      +boeffla_wl_blocker       \
                      +graphite                 \
-                     +polly                    \
                      +50hz                     \
         2>&1 | tee config.info
     - name: Install gcc-aarch64-linux-gnu
