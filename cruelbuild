@@ -71,7 +71,7 @@ toolchain = {
         'LLVM_AR': 'toolchain/bin/llvm-ar',
         'LLVM_DIS': 'toolchain/bin/llvm-dis'
     },
-     'protondd': {
+     'proton210213': {
         'CROSS_COMPILE': 'toolchain/bin/aarch64-linux-gnu-',
         'CROSS_COMPILE_ARM32': 'toolchain/bin/arm-linux-gnueabi-',
         'CC': 'toolchain/bin/clang',
