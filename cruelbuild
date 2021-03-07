@@ -55,6 +55,22 @@ toolchain = {
         'LLVM_AR': 'toolchain/bin/llvm-ar',
         'LLVM_DIS': 'toolchain/bin/llvm-dis'
     },
+    'proton210123': {
+        'CROSS_COMPILE': 'toolchain/bin/aarch64-linux-gnu-',
+        'CROSS_COMPILE_ARM32': 'toolchain/bin/arm-linux-gnueabi-',
+        'CC': 'toolchain/bin/clang',
+        'LD': 'toolchain/bin/ld.lld',
+        'AR': 'toolchain/bin/llvm-ar',
+        'NM': 'toolchain/bin/llvm-nm',
+        'OBJCOPY': 'toolchain/bin/llvm-objcopy',
+        'OBJDUMP': 'toolchain/bin/llvm-objdump',
+        'READELF': 'toolchain/bin/llvm-readelf',
+        'OBJSIZE': 'toolchain/bin/llvm-size',
+        'STRIP': 'toolchain/bin/llvm-strip',
+        'LDGOLD': 'toolchain/bin/aarch64-linux-gnu-ld.gold',
+        'LLVM_AR': 'toolchain/bin/llvm-ar',
+        'LLVM_DIS': 'toolchain/bin/llvm-dis'
+    },
     'arter97': {
         'CROSS_COMPILE': 'toolchain/bin/aarch64-elf-'
     },
