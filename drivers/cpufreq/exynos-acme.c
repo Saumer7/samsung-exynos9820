@@ -592,6 +592,128 @@ static struct cpufreq_driver exynos_driver = {
 	.attr		= cpufreq_generic_attr,
 };
 
+#ifdef CONFIG_CPU_FREQ_SUSPEND
+/* suspend min/max cpu freq tunable */
+static bool enable_suspend_freqs = false;
+module_param(enable_suspend_freqs, bool, 0644);
+
+static unsigned int cpu0_suspend_min_freq = 351000;
+static unsigned int cpu0_suspend_max_freq = 806000;
+module_param(cpu0_suspend_min_freq, uint, 0644);
+module_param(cpu0_suspend_max_freq, uint, 0644);
+
+static unsigned int cpu4_suspend_min_freq = 377000;
+static unsigned int cpu4_suspend_max_freq = 754000;
+module_param(cpu4_suspend_min_freq, uint, 0644);
+module_param(cpu4_suspend_max_freq, uint, 0644);
+
+static unsigned int cpu6_suspend_min_freq = 520000;
+static unsigned int cpu6_suspend_max_freq = 728000;
+module_param(cpu6_suspend_min_freq, uint, 0644);
+module_param(cpu6_suspend_max_freq, uint, 0644);
+
+static unsigned int cpu0_tmp_min_freq, cpu0_tmp_max_freq = 0;
+static unsigned int cpu4_tmp_min_freq, cpu4_tmp_max_freq = 0;
+static unsigned int cpu6_tmp_min_freq, cpu6_tmp_max_freq = 0;
+
+static bool update_freqs = false;
+
+void set_suspend_freqs(bool suspend)
+{
+	struct cpufreq_policy *policy0 = cpufreq_cpu_get(0);
+	struct cpufreq_policy *policy4 = cpufreq_cpu_get(4);
+	struct cpufreq_policy *policy6 = cpufreq_cpu_get(6);
+
+	unsigned int cpu0_set_suspend_min_freq, cpu0_set_suspend_max_freq = 0;
+	unsigned int cpu4_set_suspend_min_freq, cpu4_set_suspend_max_freq = 0;
+	unsigned int cpu6_set_suspend_min_freq, cpu6_set_suspend_max_freq = 0;
+
+	if (!enable_suspend_freqs)
+		return;
+
+	if (suspend) {
+		/* save current min/max cpu0 freq */
+		cpu0_tmp_min_freq = policy0->min;
+		cpu0_tmp_max_freq = policy0->max;
+
+		/* save current min/max cpu4 freq */
+		cpu4_tmp_min_freq = policy4->min;
+		cpu4_tmp_max_freq = policy4->max;
+
+		/* save current min/max cpu6 freq */
+		cpu6_tmp_min_freq = policy6->min;
+		cpu6_tmp_max_freq = policy6->max;
+
+		if (!cpu0_suspend_min_freq && !cpu0_suspend_max_freq && !cpu6_suspend_min_freq && !cpu6_suspend_max_freq)
+			goto cpu4;
+
+		if (!cpu0_suspend_min_freq)
+			cpu0_set_suspend_min_freq = cpu0_tmp_min_freq;
+		else
+			cpu0_set_suspend_min_freq = cpu0_suspend_min_freq;
+
+		if (!cpu0_suspend_max_freq)
+			cpu0_set_suspend_max_freq = cpu0_tmp_max_freq;
+		else
+			cpu0_set_suspend_max_freq = cpu0_suspend_max_freq;
+
+		/* set min/max cpu0 freq for suspend */
+		cpufreq_update_freq(0, cpu0_set_suspend_min_freq, cpu0_set_suspend_max_freq);
+
+cpu4:
+		if (!cpu4_suspend_min_freq && !cpu4_suspend_max_freq && !cpu0_suspend_min_freq && !cpu0_suspend_max_freq)
+			goto cpu6;
+
+		if (!cpu4_suspend_min_freq)
+			cpu4_set_suspend_min_freq = cpu4_tmp_min_freq;
+		else
+			cpu4_set_suspend_min_freq = cpu4_suspend_min_freq;
+
+		if (!cpu4_suspend_max_freq)
+			cpu4_set_suspend_max_freq = cpu4_tmp_max_freq;
+		else
+			cpu4_set_suspend_max_freq = cpu4_suspend_max_freq;
+
+		/* set min/max cpu4 freq for suspend */
+		cpufreq_update_freq(4, cpu4_set_suspend_min_freq, cpu4_set_suspend_max_freq);
+
+cpu6:
+		if (!cpu6_suspend_min_freq && !cpu6_suspend_max_freq)
+			goto out;
+
+		if (!cpu6_suspend_min_freq)
+			cpu6_set_suspend_min_freq = cpu6_tmp_min_freq;
+		else
+			cpu6_set_suspend_min_freq = cpu6_suspend_min_freq;
+
+		if (!cpu6_suspend_max_freq)
+			cpu6_set_suspend_max_freq = cpu6_tmp_max_freq;
+		else
+			cpu6_set_suspend_max_freq = cpu6_suspend_max_freq;
+
+		/* set min/max cpu6 freq for suspend */
+		cpufreq_update_freq(6, cpu6_set_suspend_min_freq, cpu6_set_suspend_max_freq);
+
+out:
+		if (!cpu0_suspend_min_freq && !cpu0_suspend_max_freq && !cpu4_suspend_min_freq && !cpu4_suspend_max_freq && !cpu6_suspend_min_freq && !cpu6_suspend_max_freq)
+			update_freqs = false; // was false
+		else
+			update_freqs = true; // was true
+
+	} else {
+		/* resume */
+        update_freqs = true;
+		if (update_freqs) {
+			/* restore previous min/max cpu freq */
+			cpufreq_update_freq(0, cpu0_tmp_min_freq, cpu0_tmp_max_freq);
+			cpufreq_update_freq(4, cpu4_tmp_min_freq, cpu4_tmp_max_freq);
+			cpufreq_update_freq(6, cpu6_tmp_min_freq, cpu6_tmp_max_freq);
+			update_freqs = false;
+		}
+	}
+}
+#endif // CONFIG_CPU_FREQ_SUSPEND
+
 /*********************************************************************
  *                      SUPPORT for DVFS MANAGER                     *
  *********************************************************************/
@@ -1333,6 +1455,10 @@ static __init int init_domain(struct exynos_cpufreq_domain *domain,
 	if (!of_property_read_u32(dn, "min-freq", &val))
 		// domain->min_freq = max(domain->min_freq, val);
 		domain->min_freq = val;
+
+	/* Default QoS for user */
+	if (!of_property_read_u32(dn, "user-default-qos", &val))
+		domain->user_default_qos = val;
 
 	/* If this domain has boost freq, change max */
 	val = exynos_pstate_get_boost_freq(cpumask_first(&domain->cpus));
