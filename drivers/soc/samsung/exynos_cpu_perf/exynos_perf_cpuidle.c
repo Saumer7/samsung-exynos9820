@@ -46,7 +46,7 @@ struct cpuidle_stats {
  * structure manages a idle state for each cpu to enter, and the number
  * of structure is determined by cpuidle driver.
  */
-#define MAX_FREQ	30
+#define MAX_FREQ	33  // 30
 #define MAX_CLUSTER 3
 
 struct cpu_idle_state {
