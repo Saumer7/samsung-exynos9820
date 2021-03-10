@@ -46,6 +46,7 @@ jobs:
                      +morosound                \
                      +boeffla_wl_blocker       \
                      +graphite                 \
+                     +optoptopt                \
         2>&1 | tee config.info
     - name: Install gcc-aarch64-linux-gnu
       if: env.TOOLCHAIN == 'system-gcc' || env.TOOLCHAIN == 'system-clang'
