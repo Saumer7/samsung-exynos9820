@@ -128,6 +128,17 @@ struct cpufreq_policy {
 	unsigned int		transition_delay_us;
 
 	/*
+	 * Preferred average time interval between consecutive invocations of
+	 * the driver to set the frequency for this policy.  To be set by the
+	 * scaling driver (0, which is the default, means no preference).
+	 */
+	unsigned int		up_transition_delay_us;
+	unsigned int		down_transition_delay_us;
+
+	/* Boost switch for tasks with p->in_iowait set */
+	bool            iowait_boost_enable;
+
+	/*
 	 * Remote DVFS flag (Not added to the driver structure as we don't want
 	 * to access another structure from scheduler hotpath).
 	 *
@@ -434,6 +445,7 @@ static inline void cpufreq_resume(void) {}
 /* Policy Notifiers  */
 #define CPUFREQ_ADJUST			(0)
 #define CPUFREQ_NOTIFY			(1)
+#define CPUFREQ_INCOMPATIBLE	(1)
 
 #ifdef CONFIG_CPU_FREQ
 int cpufreq_register_notifier(struct notifier_block *nb, unsigned int list);
@@ -549,6 +561,8 @@ static inline void cpufreq_policy_apply_limits(struct cpufreq_policy *policy)
 }
 #endif
 
+int cpufreq_update_freq(int cpu, unsigned int min, unsigned int max);
+
 /* Governor attribute set */
 struct gov_attr_set {
 	struct kobject kobj;
@@ -571,6 +585,8 @@ struct governor_attr {
 	ssize_t (*store)(struct gov_attr_set *attr_set, const char *buf,
 			 size_t count);
 };
+
+int cpufreq_update_freq(int cpu, unsigned int min, unsigned int max);
 
 static inline bool cpufreq_can_do_remote_dvfs(struct cpufreq_policy *policy)
 {
