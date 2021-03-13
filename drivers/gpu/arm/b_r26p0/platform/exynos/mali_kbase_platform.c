@@ -277,11 +277,7 @@ static int gpu_dvfs_update_config_data_from_dt(struct kbase_device *kbdev)
 
 	gpu_update_config_data_int(np, "gpu_pmqos_cpu_cluster_num", &platform->gpu_pmqos_cpu_cluster_num);
 	gpu_update_config_data_int(np, "gpu_max_clock", &platform->gpu_max_clock);
-#if 0
-	platform->gpu_max_clock_limit = (int)cal_dfs_get_max_freq(platform->g3d_cmu_cal_id);
-#else
 	gpu_update_config_data_int(np, "gpu_max_clock_limit", &platform->gpu_max_clock_limit);
-#endif
 	gpu_update_config_data_int(np, "gpu_min_clock", &platform->gpu_min_clock);
 	gpu_update_config_data_int(np, "gpu_min_clock_limit", &platform->gpu_min_clock_limit);
 #ifdef CONFIG_MALI_ASV_CALIBRATION_SUPPORT
