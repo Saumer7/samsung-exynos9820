@@ -683,8 +683,11 @@ void kdp_init(void)
 	cred.bp_cred_secptr 	= rkp_get_offset_bp_cred();
 
 	cred.verifiedbootstate = (u64)verifiedbootstate;
+	cred.selinux.empty 	= 0;
 #ifdef CONFIG_SAMSUNG_PRODUCT_SHIP
 	cred.selinux.ss_initialized_va	= (u64)&ss_initialized;
+#else
+	cred.selinux.ss_initialized_va	= 0;
 #endif
 	uh_call(UH_APP_RKP, 0x40, (u64)&cred, 0, 0, 0);
 }
@@ -769,8 +772,6 @@ asmlinkage __visible void __init start_kernel(void)
 	if (!IS_ERR_OR_NULL(after_dashes))
 		parse_args("Setting init args", after_dashes, NULL, 0, -1, -1,
 			   NULL, set_init_arg);
-
-	jump_label_init();
 
 	/*
 	 * These use large bootmem allocations and must precede
