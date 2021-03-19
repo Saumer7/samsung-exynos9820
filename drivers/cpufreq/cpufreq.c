@@ -25,8 +25,8 @@
 #include <linux/init.h>
 #include <linux/kernel_stat.h>
 #include <linux/module.h>
-#include <linux/mutex.h>
 #include <linux/moduleparam.h>
+#include <linux/mutex.h>
 #include <linux/slab.h>
 #include <linux/suspend.h>
 #include <linux/syscore_ops.h>
@@ -237,7 +237,7 @@ struct cpufreq_policy *cpufreq_cpu_get(unsigned int cpu)
 	struct cpufreq_policy *policy = NULL;
 	unsigned long flags;
 
-	if (cpu >= nr_cpu_ids)
+	if (WARN_ON(cpu >= nr_cpu_ids))
 		return NULL;
 
 	/* get the cpufreq driver */
@@ -724,9 +724,6 @@ static ssize_t store_##file_name					\
 	int ret, temp;							\
 	struct cpufreq_policy new_policy;				\
 									\
-	if (&policy->object == &policy->min)                            \
-               return count;		                                \
-									\
 	memcpy(&new_policy, policy, sizeof(*policy));			\
 	new_policy.min = policy->user_policy.min;			\
 	new_policy.max = policy->user_policy.max;			\
@@ -1142,6 +1139,7 @@ static struct cpufreq_policy *cpufreq_policy_alloc(unsigned int cpu)
 				   cpufreq_global_kobject, "policy%u", cpu);
 	if (ret) {
 		pr_err("%s: failed to init policy->kobj: %d\n", __func__, ret);
+		kobject_put(&policy->kobj);
 		goto err_free_real_cpus;
 	}
 
