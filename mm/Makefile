@@ -22,12 +22,11 @@ KCOV_INSTRUMENT_mmzone.o := n
 KCOV_INSTRUMENT_vmstat.o := n
 
 mmu-y			:= nommu.o
-mmu-$(CONFIG_MMU)	:= gup.o memory.o mincore.o \
+mmu-$(CONFIG_MMU)	:= gup.o highmem.o memory.o mincore.o \
 			   mlock.o mmap.o mprotect.o mremap.o msync.o \
 			   page_vma_mapped.o pagewalk.o pgtable-generic.o \
 			   rmap.o vmalloc.o
 
-mmu-$(CONFIG_HIGHMEM) += highmem.o
 
 ifdef CONFIG_CROSS_MEMORY_ATTACH
 mmu-$(CONFIG_MMU)	+= process_vm_access.o
@@ -117,4 +116,4 @@ obj-$(CONFIG_PAGE_BOOST_RECORDING) += io_record.o
 # and that the conversions specified in the format string make sense.
 CFLAGS_backing-dev.o = -Wformat
 CFLAGS_page-writeback.o = -Wformat
-CFLAGS_kmemleak.o += -DCONFIG_DEBUG_FS
+
