@@ -76,7 +76,7 @@ static int __written_first_block(struct f2fs_sb_info *sbi,
 	if (!__is_valid_data_blkaddr(addr))
 		return 1;
 	if (!f2fs_is_valid_blkaddr(sbi, addr, DATA_GENERIC))
-		return -EFAULT;
+		return -EFSCORRUPTED;
 	return 0;
 }
 
@@ -430,7 +430,7 @@ static int do_read_inode(struct inode *inode)
 
 corrupted_inode:
 	printk_ratelimited(KERN_ERR "F2FS-fs: On-disk inode is corrupted: "
-			"err: %d, inode: %lu, first Non-zero: %lu\n",
+			"err: %ld, inode: %u, first Non-zero: %lu\n",
 			err, inode->i_ino,
 			find_first_bit(page_address(node_page), F2FS_BLKSIZE));
 	print_block_data(sbi->sb, node_page->index,
@@ -439,7 +439,7 @@ corrupted_inode:
 	if (unlikely(!ignore_fs_panic)) {
 		f2fs_set_sb_extra_flag(sbi, F2FS_SEC_EXTRA_FSCK_MAGIC);
 #ifdef CONFIG_F2FS_STRICT_BUG_ON
-		panic("F2FS 0x%p %lx",
+		panic("F2FS 0x%p %x",
 			page_address(node_page),
 			find_first_bit(page_address(node_page), F2FS_BLKSIZE*8));
 #else
@@ -508,6 +508,7 @@ make_now:
 	return inode;
 
 bad_inode:
+	f2fs_inode_synced(inode);
 	iget_failed(inode);
 	trace_f2fs_iget_exit(inode, ret);
 	return ERR_PTR(ret);
