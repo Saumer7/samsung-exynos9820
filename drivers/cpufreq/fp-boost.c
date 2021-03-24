@@ -28,8 +28,10 @@
 
 #include <linux/cpu.h>
 #include <linux/cpufreq.h>
+#include <linux/state_notifier.h>
 #include <linux/input.h>
 #include <linux/slab.h>
+#include <linux/time.h>
 
 /* Available bits for boost_policy state */
 #define DRIVER_ENABLED        (1U << 0)
@@ -39,7 +41,7 @@
 #define FINGERPRINT_KEY 0x2ee
 
 /* The duration in milliseconds for the fingerprint boost */
-#define FP_BOOST_MS (2000)
+#define FP_BOOST_MS (1250)
 
 /*
  * "fp_config" = "fingerprint boost configuration". This contains the data and
@@ -66,6 +68,9 @@ struct boost_policy {
 	uint32_t state;
 };
 
+/* Using time stamp to avoid unnecessory boost */
+struct timeval prev_timeval;
+
 /* Global pointer to all of the data for the driver */
 static struct boost_policy *boost_policy_g;
 
@@ -77,6 +82,47 @@ static void update_online_cpu_policy(void);
 
 /* Boolean to let us know if input is already recieved */
 static bool touched;
+
+/* STATE_NOTIFIER stuff*/
+#define DEFAULT_SUSPEND_DEFER_TIME 	10
+static unsigned int suspend_defer_time = DEFAULT_SUSPEND_DEFER_TIME;
+static bool suspend_in_progress;
+bool state_suspended;
+static bool enabled = 1;
+static struct workqueue_struct *susp_wq;
+static struct delayed_work suspend_work;
+
+/*
+ * debug = 1 will print all
+ */
+static unsigned int debug = 1;
+
+#define dprintk(msg...)		\
+do {				\
+	if (debug)		\
+		pr_info(msg);	\
+} while (0)
+
+static void _suspend_work(struct work_struct *work)
+{
+	state_suspended = true;
+	state_notifier_call_chain(STATE_NOTIFIER_SUSPEND, NULL);
+	suspend_in_progress = false;
+	dprintk("%s: suspend completed.\n", STATE_NOTIFIER);
+}
+
+void state_suspend(void)
+{
+	dprintk("%s: suspend called.\n", STATE_NOTIFIER);
+	if (state_suspended || suspend_in_progress || !enabled)
+		return;
+
+	suspend_in_progress = true;
+
+	queue_delayed_work_on(0, susp_wq, &suspend_work, 
+		msecs_to_jiffies(suspend_defer_time * 1000));
+}
+/* END */
 
 static void fp_boost_main(struct work_struct *work)
 {
@@ -109,6 +155,9 @@ static int do_cpu_boost(struct notifier_block *nb,
 	struct cpufreq_policy *policy = data;
 	struct boost_policy *b = boost_policy_g;
 	uint32_t state;
+	struct timeval curr_timeval;
+
+	do_gettimeofday(&curr_timeval);
 
 	if (action != CPUFREQ_ADJUST)
 		return NOTIFY_OK;
@@ -125,12 +174,17 @@ static int do_cpu_boost(struct notifier_block *nb,
 
 	/* Boost CPU to max frequency for fingerprint boost */
 	if (state & FINGERPRINT_BOOST) {
-		pr_info("Boosting\n");
-		policy->cur = policy->max;
-		policy->min = policy->max;
-		return NOTIFY_OK;
-	}
+		if (curr_timeval.tv_sec>prev_timeval.tv_sec) {
+			prev_timeval.tv_sec = curr_timeval.tv_sec;
+			pr_info("Boosting\n");
+			policy->cur = policy->max;
+			policy->min = policy->max;
+			return NOTIFY_OK;
 
+		} else {
+			pr_info("Boost avoided!\n");
+		}
+	}
 	return NOTIFY_OK;
 }
 
@@ -145,6 +199,9 @@ static void cpu_fp_input_event(struct input_handle *handle, unsigned int type,
 	struct boost_policy *b = boost_policy_g;
 	struct fp_config *fp = &b->fp;
 	uint32_t state;
+
+	if (!state_suspended)
+		return;
 
 	state = get_boost_state(b);
 
@@ -336,7 +393,7 @@ static struct boost_policy *alloc_boost_policy(void)
 	if (!b)
 		return NULL;
 
-	b->wq = alloc_workqueue("cpu_fp_wq", WQ_HIGHPRI, 0);
+	b->wq = alloc_workqueue("cpu_fp_wq", WQ_HIGHPRI | WQ_UNBOUND, 0);
 	if (!b->wq) {
 		pr_err("Failed to allocate workqueue\n");
 		goto free_b;
@@ -354,6 +411,11 @@ static int __init cpu_fp_init(void)
 	struct boost_policy *b;
 	int ret;
 	touched = false;
+
+	do_gettimeofday(&prev_timeval);
+
+	/* To allow first boost */
+	prev_timeval.tv_sec -= 2;
 
 	b = alloc_boost_policy();
 	if (!b) {
