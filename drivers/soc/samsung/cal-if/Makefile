@@ -4,7 +4,7 @@
 
 # Object files in subdirectories
 
-obj-y							                        += cal-if.o
+obj-y					+= cal-if.o
 obj-$(CONFIG_PMUCAL)			+= pmucal_system.o pmucal_local.o pmucal_cpu.o pmucal_rae.o
 obj-$(CONFIG_PMUCAL_DBG)		+= pmucal_dbg.o
 obj-$(CONFIG_FLEXPMU)			+= pmucal_powermode.o
