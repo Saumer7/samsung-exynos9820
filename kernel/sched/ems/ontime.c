@@ -579,8 +579,7 @@ int ontime_task_wakeup(struct task_struct *p, int sync)
 		int cpu = smp_processor_id();
 
 		if (cpumask_test_cpu(cpu, &p->cpus_allowed)
-				&& cpumask_test_cpu(cpu, &fit_cpus)
-				&& cpu_rq(cpu)->nr_running < 2) {
+				&& cpumask_test_cpu(cpu, &fit_cpus)) {
 			trace_ems_ontime_task_wakeup(p, src_cpu, cpu, "ontime-sync wakeup");
 			return cpu;
 		}

@@ -39,6 +39,8 @@ DECLARE_KAIRISTICS(cpufreq, 32, 25, 24, 25);
 unsigned long boosted_cpu_util(int cpu, unsigned long other_util);
 
 #define SUGOV_KTHREAD_PRIORITY	50
+#define UP_RATE_LIMIT_US 5000
+#define DOWN_RATE_LIMIT_US 4000
 
 struct sugov_tunables {
 	struct gov_attr_set attr_set;
@@ -107,6 +109,7 @@ struct sugov_cpu {
 };
 
 static DEFINE_PER_CPU(struct sugov_cpu, sugov_cpu);
+static DEFINE_PER_CPU(struct sugov_tunables *, cached_tunables);
 
 /******************* exynos specific function *******************/
 #define DEFAULT_EXPIRED_TIME	70
@@ -366,7 +369,7 @@ static unsigned int get_next_freq(struct sugov_policy *sg_policy,
 	RV_DECLARE(rv);
 #endif
 
-	freq = freq * util / max;
+	freq = (freq + (freq >> 2)) * util / max;
 
 #ifdef CONFIG_SCHED_KAIR_GLUE
 	legacy_freq = freq;
@@ -440,7 +443,6 @@ static void sugov_get_util(unsigned long *util, unsigned long *max, int cpu)
 	*util = boosted_cpu_util(cpu, rt);
 #endif
 	*util = freqvar_boost_vector(cpu, *util);
-	*util = *util + (*util >> 2);
 	*util = min(*util, max_cap);
 	*max = max_cap;
 
@@ -551,7 +553,7 @@ static unsigned int sugov_next_freq_shared(struct sugov_cpu *sg_cpu, u64 time)
 
 		j_util = j_sg_cpu->util;
 		j_max = j_sg_cpu->max;
-		if (j_util * max >= j_max * util) {
+		if (j_util * max > j_max * util) {
 			util = j_util;
 			max = j_max;
 		}
@@ -885,12 +887,49 @@ static struct sugov_tunables *sugov_tunables_alloc(struct sugov_policy *sg_polic
 	return tunables;
 }
 
+static void sugov_tunables_save(struct cpufreq_policy *policy,
+		struct sugov_tunables *tunables)
+{
+	int cpu;
+	struct sugov_tunables *cached = per_cpu(cached_tunables, policy->cpu);
+ 	if (!have_governor_per_policy())
+		return;
+ 	if (!cached) {
+		cached = kzalloc(sizeof(*tunables), GFP_KERNEL);
+		if (!cached) {
+			pr_warn("Couldn't allocate tunables for caching\n");
+			return;
+		}
+		for_each_cpu(cpu, policy->related_cpus)
+			per_cpu(cached_tunables, cpu) = cached;
+	}
+ 	cached->up_rate_limit_us = tunables->up_rate_limit_us;
+	cached->down_rate_limit_us = tunables->down_rate_limit_us;
+}
+
 static void sugov_tunables_free(struct sugov_tunables *tunables)
 {
 	if (!have_governor_per_policy())
 		global_tunables = NULL;
 
 	kfree(tunables);
+}
+
+static void sugov_tunables_restore(struct cpufreq_policy *policy)
+{
+	struct sugov_policy *sg_policy = policy->governor_data;
+	struct sugov_tunables *tunables = sg_policy->tunables;
+	struct sugov_tunables *cached = per_cpu(cached_tunables, policy->cpu);
+ 	if (!cached)
+		return;
+ 	tunables->up_rate_limit_us = cached->up_rate_limit_us;
+	tunables->down_rate_limit_us = cached->down_rate_limit_us;
+	sg_policy->up_rate_delay_ns =
+		tunables->up_rate_limit_us * NSEC_PER_USEC;
+	sg_policy->down_rate_delay_ns =
+		tunables->down_rate_limit_us * NSEC_PER_USEC;
+	sg_policy->min_rate_limit_ns = min(sg_policy->up_rate_delay_ns,
+					   sg_policy->down_rate_delay_ns);
 }
 
 static int sugov_init(struct cpufreq_policy *policy)
@@ -941,8 +980,8 @@ tunables_init:
 		goto stop_kthread;
 	}
 
-	tunables->up_rate_limit_us = cpufreq_policy_transition_delay_us(policy);
-	tunables->down_rate_limit_us = cpufreq_policy_transition_delay_us(policy);
+	tunables->up_rate_limit_us = UP_RATE_LIMIT_US;
+	tunables->down_rate_limit_us = DOWN_RATE_LIMIT_US;
 #ifdef CONFIG_SCHED_KAIR_GLUE
 	tunables->fb_legacy = true;
 	sg_policy->be_stochastic = false;
@@ -950,6 +989,8 @@ tunables_init:
 
 	policy->governor_data = sg_policy;
 	sg_policy->tunables = tunables;
+
+	sugov_tunables_restore(policy);
 
 	ret = kobject_init_and_add(&tunables->attr_set.kobj, &sugov_tunables_ktype,
 				   get_governor_parent_kobj(policy), "%s",
@@ -962,6 +1003,7 @@ out:
 	return 0;
 
 fail:
+	kobject_put(&tunables->attr_set.kobj);
 	policy->governor_data = NULL;
 	sugov_tunables_free(tunables);
 
@@ -992,8 +1034,10 @@ static void sugov_exit(struct cpufreq_policy *policy)
 
 	count = gov_attr_set_put(&tunables->attr_set, &sg_policy->tunables_hook);
 	policy->governor_data = NULL;
-	if (!count)
+	if (!count) {
+		sugov_tunables_save(policy, tunables);
 		sugov_tunables_free(tunables);
+    }
 
 #ifdef CONFIG_SCHED_KAIR_GLUE
 	if (sg_cpu->util_vessel) {

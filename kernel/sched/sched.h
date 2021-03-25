@@ -324,8 +324,6 @@ struct cfs_bandwidth {
 	ktime_t period;
 	u64 quota, runtime;
 	s64 hierarchical_quota;
-	u64 runtime_expires;
-	int expires_seq;
 
 	short idle, period_active;
 	struct hrtimer period_timer, slack_timer;
@@ -544,8 +542,6 @@ struct cfs_rq {
 
 #ifdef CONFIG_CFS_BANDWIDTH
 	int runtime_enabled;
-	int expires_seq;
-	u64 runtime_expires;
 	s64 runtime_remaining;
 
 	u64 throttled_clock, throttled_clock_task;
@@ -1812,7 +1808,7 @@ extern void rt_rq_util_change(struct rt_rq *rt_rq);
 static __always_inline
 unsigned long arch_scale_freq_capacity(struct sched_domain *sd, int cpu)
 {
-	return capacity_orig_of(cpu);
+	return SCHED_CAPACITY_SCALE;
 }
 #endif
 
@@ -1820,7 +1816,7 @@ unsigned long arch_scale_freq_capacity(struct sched_domain *sd, int cpu)
 static __always_inline
 unsigned long arch_scale_max_freq_capacity(struct sched_domain *sd, int cpu)
 {
-	return capacity_orig_of(cpu);
+	return SCHED_CAPACITY_SCALE;
 }
 #endif
 
@@ -1831,7 +1827,7 @@ unsigned long arch_scale_cpu_capacity(struct sched_domain *sd, int cpu)
 	if (sd && (sd->flags & SD_SHARE_CPUCAPACITY) && (sd->span_weight > 1))
 		return sd->smt_gain / sd->span_weight;
 
-	return capacity_orig_of(cpu);
+	return SCHED_CAPACITY_SCALE;
 }
 #endif
 
