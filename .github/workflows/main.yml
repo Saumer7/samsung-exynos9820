@@ -3,7 +3,7 @@ name: Build
 on: [push]
 
 env:
-  TOOLCHAIN: proton210213
+  TOOLCHAIN: proton
   INSTALLER: yes
 
 jobs:
@@ -21,7 +21,7 @@ jobs:
         set -e -o pipefail
         ./cruelbuild config                    \
                      model=${{ matrix.model }} \
-                     name="Cruel-V3.10experi"  \
+                     name="CruelV3.10experi"  \
                      toolchain=$TOOLCHAIN      \
                      +magisk=v21.4             \
                      +dtb                      \
