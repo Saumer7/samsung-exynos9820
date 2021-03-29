@@ -3,7 +3,7 @@ name: Build
 on: [push]
 
 env:
-  TOOLCHAIN: proton-210213
+  TOOLCHAIN: proton210213
   INSTALLER: yes
 
 jobs:
