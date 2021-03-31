@@ -29,9 +29,6 @@ jobs:
                      +fp_boost                 \
                      +noatime                  \
                      +simple_lmk               \
-                     +io_maple                 \
-                     +tcp_bbr                  \
-                     +tcp_htcp                 \
                      +performance              \
                      +nodebug                  \
                      +nomodules                \
