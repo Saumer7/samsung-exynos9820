@@ -21,9 +21,9 @@ jobs:
         set -e -o pipefail
         ./cruelbuild config                    \
                      model=${{ matrix.model }} \
-                     name="CruelV3.10experi"  \
+                     name="CruelV3.10experi"   \
                      toolchain=$TOOLCHAIN      \
-                     +magisk=v21.4             \
+                     +magisk                   \
                      +dtb                      \
                      +always_permit            \
                      +fp_boost                 \
