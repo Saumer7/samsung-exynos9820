@@ -23,7 +23,7 @@ jobs:
                      model=${{ matrix.model }} \
                      name="CruelV3.10experi"   \
                      toolchain=$TOOLCHAIN      \
-                     +magisk                   \
+                     +magisk=canary            \
                      +dtb                      \
                      +always_permit            \
                      +fp_boost                 \
