@@ -10326,7 +10326,7 @@
 			trips {
 
 				big-cold {
-					temperature = <0x4e20>;
+					temperature = <0xea60>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2d1>;
@@ -10334,7 +10334,7 @@
 				};
 
 				big-switch-on {
-					temperature = <0xc350>;
+					temperature = <0x11940>;
 					hysteresis = <0x7d0>;
 					type = "active";
 					linux,phandle = <0x2d2>;
@@ -10342,7 +10342,7 @@
 				};
 
 				big-control-temp {
-					temperature = <0xfde8>;
+					temperature = <0x12cc8>;
 					hysteresis = <0x1388>;
 					type = "passive";
 					linux,phandle = <0x10d>;
@@ -10350,7 +10350,7 @@
 				};
 
 				big-alert0 {
-					temperature = <0x11940>;
+					temperature = <0x14050>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2d3>;
@@ -10358,7 +10358,7 @@
 				};
 
 				big-alert1 {
-					temperature = <0x14050>;
+					temperature = <0x153d8>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2d4>;
@@ -10417,7 +10417,7 @@
 			trips {
 
 				mid-cold {
-					temperature = <0x4e20>;
+					temperature = <0xea60>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2d9>;
@@ -10425,7 +10425,7 @@
 				};
 
 				mid-switch-on {
-					temperature = <0xcf08>;
+					temperature = <0x11940>;
 					hysteresis = <0x7d0>;
 					type = "active";
 					linux,phandle = <0x2da>;
@@ -10501,7 +10501,7 @@
 			trips {
 
 				little-alert0 {
-					temperature = <0x4e20>;
+					temperature = <0x11940>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x113>;
@@ -10509,7 +10509,7 @@
 				};
 
 				little-alert1 {
-					temperature = <0x128e0>;
+					temperature = <0x12cc8>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x115>;
@@ -10517,7 +10517,7 @@
 				};
 
 				little-alert2 {
-					temperature = <0x13c68>;
+					temperature = <0x14050>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x116>;
