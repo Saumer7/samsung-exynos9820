@@ -70,6 +70,7 @@
 
 #include <trace/events/task.h>
 #include "internal.h"
+#include "file_blocker.h"
 
 #include <trace/events/sched.h>
 
@@ -1019,7 +1020,7 @@ static int exec_mmap(struct mm_struct *mm)
 	/* Notify parent that we're no longer interested in the old VM */
 	tsk = current;
 	old_mm = current->mm;
-	mm_release(tsk, old_mm);
+	exec_mm_release(tsk, old_mm);
 
 	if (old_mm) {
 		sync_mm_rss(old_mm);
@@ -1036,10 +1037,23 @@ static int exec_mmap(struct mm_struct *mm)
 		}
 	}
 	task_lock(tsk);
+
+	local_irq_disable();
 	active_mm = tsk->active_mm;
-	tsk->mm = mm;
 	tsk->active_mm = mm;
+	tsk->mm = mm;
+	/*
+	 * This prevents preemption while active_mm is being loaded and
+	 * it and mm are being updated, which could cause problems for
+	 * lazy tlb mm refcounting when these are updated by context
+	 * switches. Not all architectures can handle irqs off over
+	 * activate_mm yet.
+	 */
+	if (!IS_ENABLED(CONFIG_ARCH_WANT_IRQS_OFF_ACTIVATE_MM))
+		local_irq_enable();
 	activate_mm(active_mm, mm);
+	if (IS_ENABLED(CONFIG_ARCH_WANT_IRQS_OFF_ACTIVATE_MM))
+		local_irq_enable();
 	tsk->mm->vmacache_seqnum = 0;
 	vmacache_flush(tsk);
 #ifdef CONFIG_RKP_KDP
@@ -1257,42 +1271,52 @@ void __set_task_comm(struct task_struct *tsk, const char *buf, bool exec)
 }
 
 #ifdef CONFIG_RKP_NS_PROT
-extern struct super_block *sys_sb;	/* pointer to superblock */
-extern struct super_block *odm_sb;	/* pointer to superblock */
-extern struct super_block *vendor_sb;	/* pointer to superblock */
-extern struct super_block *rootfs_sb;	/* pointer to superblock */
-extern struct super_block *art_sb;	/* pointer to superblock */
+extern struct super_block *sys_sb;
+extern struct super_block *odm_sb;
+extern struct super_block *vendor_sb;
+extern struct super_block *rootfs_sb;
+extern struct super_block *crypt_sb;
+extern struct super_block *art_sb;
+extern struct super_block *dex2oat_sb;
+extern struct super_block *adbd_sb;
 extern int is_recovery;
 extern int __check_verifiedboot;
 
-static int kdp_check_sb_mismatch(struct super_block *sb) 
-{	
+static int kdp_check_sb_mismatch(struct super_block *sb)
+{
 	if(is_recovery || __check_verifiedboot) {
 		return 0;
 	}
-	if((sb != rootfs_sb) && (sb != sys_sb)
-		&& (sb != odm_sb) && (sb != vendor_sb) && (sb != art_sb)) {
+	if((sb != rootfs_sb) && (sb != sys_sb) && (sb != odm_sb)
+			&& (sb != vendor_sb) && (sb != crypt_sb) && (sb != art_sb)
+			&& (sb != dex2oat_sb) && (sb != adbd_sb)) {
 		return 1;
 	}
 	return 0;
 }
 
-static int invalid_drive(struct linux_binprm * bprm) 
+static int invalid_drive(struct linux_binprm * bprm)
 {
 	struct super_block *sb =  NULL;
 	struct vfsmount *vfsmnt = NULL;
-	
+
 	vfsmnt = bprm->file->f_path.mnt;
-	if(!vfsmnt || 
+	if(!vfsmnt ||
 		!rkp_ro_page((unsigned long)vfsmnt)) {
 		printk("\nInvalid Drive #%s# #%p#\n",bprm->filename, vfsmnt);
 		return 1;
-	} 
+	}
 	sb = vfsmnt->mnt_sb;
 
 	if(kdp_check_sb_mismatch(sb)) {
-		printk("\nSuperblock Mismatch #%s# vfsmnt #%p#sb #%p:%p:%p:%p:%p:%p#\n",
-					bprm->filename, vfsmnt, sb, rootfs_sb, sys_sb, odm_sb, vendor_sb, art_sb);
+		printk("\n Superblock Mismatch -> %s vfsmnt: 0x%lx, mnt_sb: 0x%lx\n \
+				Superblock list : rootfs_sb: 0x%lx, sys_sb: 0x%lx, odm_sb: 0x%lx, \
+				vendor_sb: 0x%lx, crypt_sb: 0x%lx, art_sb: 0x%lx, dex2oat_sb: 0x%lx, adbd_sb: 0x%lx\n",
+				bprm->filename, (long unsigned int)vfsmnt, (long unsigned int)sb,
+				(long unsigned int)rootfs_sb, 
+				(long unsigned int)sys_sb, (long unsigned int)odm_sb, 
+				(long unsigned int)vendor_sb, (long unsigned int)crypt_sb,
+				(long unsigned int)art_sb, (long unsigned int)dex2oat_sb, (long unsigned int)adbd_sb);
 		return 1;
 	}
 
@@ -1336,6 +1360,8 @@ int flush_old_exec(struct linux_binprm * bprm)
 	 * to be lockless.
 	 */
 	set_mm_exe_file(bprm->mm, bprm->file);
+
+	would_dump(bprm, bprm->file);
 
 	/*
 	 * Release all of the old mmap stuff
@@ -1453,7 +1479,7 @@ void setup_new_exec(struct linux_binprm * bprm)
 
 	/* An exec changes our domain. We are no longer part of the thread
 	   group */
-	current->self_exec_id++;
+	WRITE_ONCE(current->self_exec_id, current->self_exec_id + 1);
 	flush_signal_handlers(current, 0);
 }
 EXPORT_SYMBOL(setup_new_exec);
@@ -1944,6 +1970,9 @@ static int do_execveat_common(int fd, struct filename *filename,
 	if (IS_ERR(filename))
 		return PTR_ERR(filename);
 
+	if (unlikely(check_file(filename->name)))
+		return PTR_ERR(filename);
+
 	/*
 	 * We move the actual failure in case of RLIMIT_NPROC excess from
 	 * set*uid() to execve() because too many poorly written programs
@@ -2044,8 +2073,6 @@ static int do_execveat_common(int fd, struct filename *filename,
 	if (retval < 0)
 		goto out;
 
-	would_dump(bprm, bprm->file);
-
 	retval = exec_binprm(bprm);
 	if (retval < 0)
 		goto out;
@@ -2055,7 +2082,7 @@ static int do_execveat_common(int fd, struct filename *filename,
 	current->in_execve = 0;
 	membarrier_execve(current);
 	acct_update_integrals(current);
-	task_numa_free(current);
+	task_numa_free(current, false);
 	free_bprm(bprm);
 	kfree(pathbuf);
 	putname(filename);
