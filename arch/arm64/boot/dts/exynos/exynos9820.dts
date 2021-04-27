@@ -10326,7 +10326,7 @@
 			trips {
 
 				big-cold {
-					temperature = <0xea60>;
+					temperature = <0x128e0>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2d1>;
@@ -10334,7 +10334,7 @@
 				};
 
 				big-switch-on {
-					temperature = <0x11940>;
+					temperature = <0x130b0>;
 					hysteresis = <0x7d0>;
 					type = "active";
 					linux,phandle = <0x2d2>;
@@ -10342,7 +10342,7 @@
 				};
 
 				big-control-temp {
-					temperature = <0x12cc8>;
+					temperature = <0x13880>;
 					hysteresis = <0x1388>;
 					type = "passive";
 					linux,phandle = <0x10d>;
@@ -10350,7 +10350,7 @@
 				};
 
 				big-alert0 {
-					temperature = <0x14050>;
+					temperature = <0x14820>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2d3>;
@@ -10358,7 +10358,7 @@
 				};
 
 				big-alert1 {
-					temperature = <0x153d8>;
+					temperature = <0x157c0>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2d4>;
@@ -10417,7 +10417,7 @@
 			trips {
 
 				mid-cold {
-					temperature = <0xea60>;
+					temperature = <0x13880>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2d9>;
@@ -10425,7 +10425,7 @@
 				};
 
 				mid-switch-on {
-					temperature = <0x11940>;
+					temperature = <0x14050>;
 					hysteresis = <0x7d0>;
 					type = "active";
 					linux,phandle = <0x2da>;
@@ -10433,7 +10433,7 @@
 				};
 
 				mid-control-temp {
-					temperature = <0x14438>;
+					temperature = <0x14c08>;
 					hysteresis = <0x1388>;
 					type = "passive";
 					linux,phandle = <0x110>;
@@ -10441,7 +10441,7 @@
 				};
 
 				mid-alert0 {
-					temperature = <0x14c08>;
+					temperature = <0x153d8>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2db>;
@@ -10501,7 +10501,7 @@
 			trips {
 
 				little-alert0 {
-					temperature = <0x11940>;
+					temperature = <0x128e0>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x113>;
@@ -10509,7 +10509,7 @@
 				};
 
 				little-alert1 {
-					temperature = <0x12cc8>;
+					temperature = <0x130b0>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x115>;
