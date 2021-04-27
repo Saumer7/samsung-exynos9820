@@ -356,7 +356,8 @@ int __filemap_fdatawrite_range(struct address_space *mapping, loff_t start,
 		.range_end = end,
 	};
 
-	if (!mapping_cap_writeback_dirty(mapping))
+	if (!mapping_cap_writeback_dirty(mapping) ||
+	    !mapping_tagged(mapping, PAGECACHE_TAG_DIRTY))
 		return 0;
 
 	wbc_attach_fdatawrite_inode(&wbc, mapping->host);
@@ -2407,7 +2408,7 @@ static void do_async_mmap_readahead(struct vm_area_struct *vma,
 	struct address_space *mapping = file->f_mapping;
 
 	/* If we don't want any read-ahead, don't bother */
-	if (vma->vm_flags & VM_RAND_READ)
+	if (vma->vm_flags & VM_RAND_READ || !ra->ra_pages)
 		return;
 	if (ra->mmap_miss > 0)
 		ra->mmap_miss--;
@@ -2818,6 +2819,14 @@ filler:
 		unlock_page(page);
 		goto out;
 	}
+
+	/*
+	 * A previous I/O error may have been due to temporary
+	 * failures.
+	 * Clear page error before actual read, PG_error will be
+	 * set again if read page fails.
+	 */
+	ClearPageError(page);
 	goto filler;
 
 out:
