@@ -896,9 +896,13 @@ int f2fs_get_valid_checkpoint(struct f2fs_sb_info *sbi)
 
 	/* Sanity checking of checkpoint */
 	if (f2fs_sanity_check_ckpt(sbi)) {
+		print_block_data(sbi->sb, cur_page->index,
+				 page_address(cur_page), 0, blk_size);
 		err = -EFSCORRUPTED;
 		goto free_fail_no_cp;
 	}
+
+	f2fs_get_fsck_stat(sbi);
 
 	if (cp_blks <= 1)
 		goto done;
@@ -927,7 +931,7 @@ free_fail_no_cp:
 	f2fs_put_page(cp1, 1);
 	f2fs_put_page(cp2, 1);
 fail_no_cp:
-	kvfree(sbi->ckpt);
+	kfree(sbi->ckpt);
 	return err;
 }
 
@@ -1147,6 +1151,11 @@ static int block_operations(struct f2fs_sb_info *sbi)
 #endif
 	blk_start_plug(&plug);
 
+	/*
+	 * Let's flush inline_data in dirty node pages.
+	 */
+	f2fs_flush_inline_data(sbi);
+
 retry_flush_quotas:
 	if (__need_flush_quota(sbi)) {
 		int locked;
@@ -1182,7 +1191,9 @@ retry_flush_dents:
 		if (err)
 			goto out;
 		blk_flush_plug(current);
+#ifdef CONFIG_F2FS_SEC_BLOCK_OPERATIONS_DEBUG
 		sec_dbg_add_time(dbg_entry, DENTS, s_jiffies);
+#endif
 		cond_resched();
 		goto retry_flush_quotas;
 	}
@@ -1207,7 +1218,9 @@ retry_flush_dents:
 		if (err)
 			goto out;
 		blk_flush_plug(current);
+#ifdef CONFIG_F2FS_SEC_BLOCK_OPERATIONS_DEBUG
 		sec_dbg_add_time(dbg_entry, IMETA, s_jiffies);
+#endif
 		cond_resched();
 		goto retry_flush_quotas;
 	}
@@ -1228,7 +1241,9 @@ retry_flush_nodes:
 			goto out;
 		}
 		blk_flush_plug(current);
+#ifdef CONFIG_F2FS_SEC_BLOCK_OPERATIONS_DEBUG
 		sec_dbg_add_time(dbg_entry, NODES, s_jiffies);
+#endif
 		cond_resched();
 		goto retry_flush_nodes;
 	}
