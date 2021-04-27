@@ -215,6 +215,8 @@ int f2fs_ra_meta_pages(struct f2fs_sb_info *sbi, block_t start, int nrpages,
 					blkno * NAT_ENTRY_PER_BLOCK);
 			break;
 		case META_SIT:
+			if (unlikely(blkno >= TOTAL_SEGS(sbi)))
+				goto out;
 			/* get sit block addr */
 			fio.new_blkaddr = current_sit_addr(sbi,
 					blkno * SIT_ENTRY_PER_BLOCK);
@@ -852,6 +854,7 @@ int f2fs_get_valid_checkpoint(struct f2fs_sb_info *sbi)
 	unsigned int cp_blks = 1 + __cp_payload(sbi);
 	block_t cp_blk_no;
 	int i;
+	int err;
 
 	sbi->ckpt = f2fs_kzalloc(sbi, array_size(blk_size, cp_blks),
 				 GFP_KERNEL);
@@ -879,6 +882,7 @@ int f2fs_get_valid_checkpoint(struct f2fs_sb_info *sbi)
 	} else if (cp2) {
 		cur_page = cp2;
 	} else {
+		err = -EFSCORRUPTED;
 		goto fail_no_cp;
 	}
 
@@ -894,6 +898,7 @@ int f2fs_get_valid_checkpoint(struct f2fs_sb_info *sbi)
 	if (f2fs_sanity_check_ckpt(sbi)) {
 		print_block_data(sbi->sb, cur_page->index,
 				 page_address(cur_page), 0, blk_size);
+		err = -EFSCORRUPTED;
 		goto free_fail_no_cp;
 	}
 
@@ -927,7 +932,7 @@ free_fail_no_cp:
 	f2fs_put_page(cp2, 1);
 fail_no_cp:
 	kfree(sbi->ckpt);
-	return -EINVAL;
+	return err;
 }
 
 static void __add_dirty_inode(struct inode *inode, enum inode_type type)
@@ -1005,8 +1010,12 @@ int f2fs_sync_dirty_inodes(struct f2fs_sb_info *sbi, enum inode_type type)
 				get_pages(sbi, is_dir ?
 				F2FS_DIRTY_DENTS : F2FS_DIRTY_DATA));
 retry:
-	if (unlikely(f2fs_cp_error(sbi)))
+	if (unlikely(f2fs_cp_error(sbi))) {
+		trace_f2fs_sync_dirty_inodes_exit(sbi->sb, is_dir,
+				get_pages(sbi, is_dir ?
+				F2FS_DIRTY_DENTS : F2FS_DIRTY_DATA));
 		return -EIO;
+	}
 
 	spin_lock(&sbi->inode_lock[type]);
 
@@ -1142,6 +1151,11 @@ static int block_operations(struct f2fs_sb_info *sbi)
 #endif
 	blk_start_plug(&plug);
 
+	/*
+	 * Let's flush inline_data in dirty node pages.
+	 */
+	f2fs_flush_inline_data(sbi);
+
 retry_flush_quotas:
 	if (__need_flush_quota(sbi)) {
 		int locked;
@@ -1177,7 +1191,9 @@ retry_flush_dents:
 		if (err)
 			goto out;
 		blk_flush_plug(current);
+#ifdef CONFIG_F2FS_SEC_BLOCK_OPERATIONS_DEBUG
 		sec_dbg_add_time(dbg_entry, DENTS, s_jiffies);
+#endif
 		cond_resched();
 		goto retry_flush_quotas;
 	}
@@ -1202,7 +1218,9 @@ retry_flush_dents:
 		if (err)
 			goto out;
 		blk_flush_plug(current);
+#ifdef CONFIG_F2FS_SEC_BLOCK_OPERATIONS_DEBUG
 		sec_dbg_add_time(dbg_entry, IMETA, s_jiffies);
+#endif
 		cond_resched();
 		goto retry_flush_quotas;
 	}
@@ -1223,7 +1241,9 @@ retry_flush_nodes:
 			goto out;
 		}
 		blk_flush_plug(current);
+#ifdef CONFIG_F2FS_SEC_BLOCK_OPERATIONS_DEBUG
 		sec_dbg_add_time(dbg_entry, NODES, s_jiffies);
+#endif
 		cond_resched();
 		goto retry_flush_nodes;
 	}
