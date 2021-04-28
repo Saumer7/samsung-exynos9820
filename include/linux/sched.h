@@ -1313,6 +1313,13 @@ struct task_struct {
 #ifdef CONFIG_SEC_DEBUG_DTASK
 	struct sec_debug_wait		ssdbg_wait;
 #endif
+
+        struct {
+		struct work_struct work;
+		atomic_t running;
+		bool free_stack;
+	} async_free;
+
 	/*
 	 * New fields for task_struct should be added above here, so that
 	 * they are included in the randomized portion of task_struct.
@@ -1909,3 +1916,12 @@ extern long sched_getaffinity(pid_t pid, struct cpumask *mask);
 #endif
 
 #endif
+
+/* EAS governors */
+#define SCHED_CPUFREQ_RT        (1U << 0)
+#define SCHED_CPUFREQ_DL        (1U << 1)
+#define SCHED_CPUFREQ_IOWAIT    (1U << 2)
+#define SCHED_CPUFREQ_INTERCLUSTER_MIG (1U << 3)
+#define SCHED_CPUFREQ_IDLE	    (1U << 3)
+#define SCHED_CPUFREQ_PL        (1U << 5)
+#define SCHED_CPUFREQ_RT_DL (SCHED_CPUFREQ_RT | SCHED_CPUFREQ_DL)
