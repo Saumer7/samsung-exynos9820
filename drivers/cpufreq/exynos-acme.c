@@ -1115,7 +1115,7 @@ __ATTR(freqvar_idlelatency, S_IRUGO | S_IWUSR,
 /*********************************************************************
  *                  INITIALIZE EXYNOS CPUFREQ DRIVER                 *
  *********************************************************************/
-static int cpu_undervolt = 1800000;
+static int cpu_undervolt = 25000;
 
 static void print_domain_info(struct exynos_cpufreq_domain *domain)
 {
@@ -1170,8 +1170,8 @@ static ssize_t store_cpu_table_undervolt(struct kobject *kobj, struct kobj_attri
 static ssize_t show_cpu_table_undervolt(struct kobject *kobj,
 				struct kobj_attribute *attr, char *buf)
 {
-	if (sysfs_create_file(power_kobj, &freqvar_idlelatency.attr))
-		pr_err("failed to create freqvar_idlelatency node\n");
+	return snprintf(buf, 10, "%d\n",cpu_undervolt);
+}
 
 static struct kobj_attribute cpu_table_undervolt =
 __ATTR(cpu_table_undervolt, 0644,
