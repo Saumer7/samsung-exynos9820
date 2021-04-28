@@ -1170,8 +1170,8 @@ static ssize_t store_cpu_table_undervolt(struct kobject *kobj, struct kobj_attri
 static ssize_t show_cpu_table_undervolt(struct kobject *kobj,
 				struct kobj_attribute *attr, char *buf)
 {
-	return snprintf(buf, 10, "%d\n",cpu_undervolt);
-}
+	if (sysfs_create_file(power_kobj, &freqvar_idlelatency.attr))
+		pr_err("failed to create freqvar_idlelatency node\n");
 
 static struct kobj_attribute cpu_table_undervolt =
 __ATTR(cpu_table_undervolt, 0644,
@@ -1481,6 +1481,10 @@ static __init int init_domain(struct exynos_cpufreq_domain *domain,
 	if (!of_property_read_u32(dn, "min-freq", &val))
 		// domain->min_freq = max(domain->min_freq, val);
 		domain->min_freq = val;
+
+	/* Default QoS for user */
+	if (!of_property_read_u32(dn, "user-default-qos", &val))
+		domain->user_default_qos = val;
 
 	/* If this domain has boost freq, change max */
 	val = exynos_pstate_get_boost_freq(cpumask_first(&domain->cpus));
