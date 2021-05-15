@@ -28,7 +28,7 @@
 					/* Frequency table */
 					/* for level	:	1_Head */
 					input_booster,cpu2_freqs = <0>;
-					input_booster,cpu1_freqs = <1404000>;
+					input_booster,cpu1_freqs = <0>;
 					input_booster,hmp_boost = <1>;
 					input_booster,kfc_freqs = <0>;
 					input_booster,mif_freqs = <0>;
@@ -49,7 +49,7 @@
 					/* Frequency table */
 					/* for level	:	1_Head */
 					input_booster,cpu2_freqs = <0>;
-					input_booster,cpu1_freqs = <1404000>;
+					input_booster,cpu1_freqs = <0>;
 					input_booster,hmp_boost = <1>;
 					input_booster,kfc_freqs = <0>;
 					input_booster,mif_freqs = <0>;
@@ -69,11 +69,11 @@
 
 					/* Frequency table */
 					/* for level	:	1_Head, 2_Head, 2_Tail */
-					input_booster,cpu2_freqs = <819000 819000 624000>;
-					input_booster,cpu1_freqs = <1222000 1222000 962000>;
+					input_booster,cpu2_freqs = <0 0 0>;
+					input_booster,cpu1_freqs = <0 0 0>;
 					input_booster,hmp_boost = <1 1 1>;
-					input_booster,kfc_freqs = <806000 806000 806000>;
-					input_booster,mif_freqs = <1014000 1014000 1014000>;
+					input_booster,kfc_freqs = <0 0 0>;
+					input_booster,mif_freqs = <0 0 0>;
 					input_booster,int_freqs = <0 0 0>;
 					input_booster,dma_latency = <0 0 0>;
 
@@ -90,11 +90,11 @@
 
 					/* Frequency table */
 					/* for level	:	1_Head 2_Tail*/
-					input_booster,cpu2_freqs = <819000 624000>;
-					input_booster,cpu1_freqs = <1222000 962000>;
+					input_booster,cpu2_freqs = <0 0>;
+					input_booster,cpu1_freqs = <0 0>;
 					input_booster,hmp_boost = <1 1>;
-					input_booster,kfc_freqs = <806000 806000>;
-					input_booster,mif_freqs = <1014000 1014000>;
+					input_booster,kfc_freqs = <0 0>;
+					input_booster,mif_freqs = <0 0>;
 					input_booster,int_freqs = <0 0>;
 					input_booster,dma_latency = <0 0>;
 
@@ -112,9 +112,9 @@
 					/* Frequency table */
 					/* for level	:	1_Head 2_Tail*/
 					input_booster,cpu2_freqs = <0 0>;
-					input_booster,cpu1_freqs = <1404000 1404000>;
+					input_booster,cpu1_freqs = <0 0>;
 					input_booster,hmp_boost = <1 1>;
-					input_booster,kfc_freqs = <806000 806000>;
+					input_booster,kfc_freqs = <0 0>;
 					input_booster,mif_freqs = <0 0>;
 					input_booster,int_freqs = <0 0>;
 					input_booster,dma_latency = <0 0>;
@@ -133,9 +133,9 @@
 					/* Frequency table */
 					/* for level	:	1_Head 2_Tail*/
 					input_booster,cpu2_freqs = <0 0>;			
-					input_booster,cpu1_freqs = <1404000 1222000>;
+					input_booster,cpu1_freqs = <0 0>;
 					input_booster,hmp_boost = <1 1>;
-					input_booster,kfc_freqs = <806000 806000>;
+					input_booster,kfc_freqs = <0 0>;
 					input_booster,mif_freqs = <0 0>;
 					input_booster,int_freqs = <0 0>;
 					input_booster,dma_latency = <0 0>;
@@ -154,9 +154,9 @@
 					/* Frequency table */
 					/* for level	:	1_Head 2_Tail*/
 					input_booster,cpu2_freqs = <0 0>;			
-					input_booster,cpu1_freqs = <1404000 0>;
+					input_booster,cpu1_freqs = <0 0>;
 					input_booster,hmp_boost = <1 0>;
-					input_booster,kfc_freqs = <806000 0>;
+					input_booster,kfc_freqs = <0 0>;
 					input_booster,mif_freqs = <0 0>;
 					input_booster,int_freqs = <0 0>;
 					input_booster,dma_latency = <0 0>;
@@ -175,9 +175,9 @@
 					/* Frequency table */
 					/* for level	:	1_Head 2_Tail*/
 					input_booster,cpu2_freqs = <0 0>;			
-					input_booster,cpu1_freqs = <1404000 1222000>;
+					input_booster,cpu1_freqs = <0 0>;
 					input_booster,hmp_boost = <1 1>;
-					input_booster,kfc_freqs = <806000 806000>;
+					input_booster,kfc_freqs = <0 0>;
 					input_booster,mif_freqs = <0 0>;
 					input_booster,int_freqs = <0 0>;
 					input_booster,dma_latency = <0 0>;
@@ -196,9 +196,9 @@
 					/* Frequency table */
 					/* for level	:	1_Head 2_Tail*/
 					input_booster,cpu2_freqs = <0 0>;			
-					input_booster,cpu1_freqs = <1508000 1222000>;
+					input_booster,cpu1_freqs = <0 0>;
 					input_booster,hmp_boost = <1 1>;
-					input_booster,kfc_freqs = <806000 806000>;
+					input_booster,kfc_freqs = <0 0>;
 					input_booster,bimc_freqs = <0 0>;
 					input_booster,dma_latency = <0 0>;
 
@@ -215,9 +215,9 @@
 					/* Frequency table */
 					/* for level	:	1_Head */
 					input_booster,cpu2_freqs = <0 0>;			
-					input_booster,cpu1_freqs = <1508000>;
+					input_booster,cpu1_freqs = <0>;
 					input_booster,hmp_boost = <1>;
-					input_booster,kfc_freqs = <1053000>;
+					input_booster,kfc_freqs = <0>;
 					input_booster,mif_freqs = <0>;
 					input_booster,int_freqs = <0>;
 					input_booster,dma_latency = <0>;
