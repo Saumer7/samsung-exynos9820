@@ -9678,7 +9678,7 @@
 			emc_mode_0 {
 				mode_name = "QUAD";
 				cpus = "0-7";
-				max_freq = <0x23b4a0>;
+				max_freq = <0x27ac40>;
 				boost_cpus = "6-7";
 				change_latency = <0xf>;
 				enabled = <0x1>;
@@ -9688,7 +9688,7 @@
 				mode_name = "DUAL";
 				cpus = "0-3,6-7";
 				boost_cpus = "6-7";
-				max_freq = <0x269ad0>;
+				max_freq = <0x29a810>;
 				change_latency = <0x1e>;
 				ldsum_thr = <0x4b0>;
 				enabled = <0x1>;
