@@ -9882,7 +9882,7 @@
 			sibling-cpus = "0-3";
 			cal-id = <0xb040002>;
 			dm-type = <0x0>;
-			max-freq = <0x1dc130>;
+			max-freq = <0x202290>;
 			min-freq = <0x1fbd0>;
 			pm_qos-min-class = <0x3>;
 			pm_qos-max-class = <0x4>;
@@ -9935,7 +9935,7 @@
 			cal-id = <0xb040004>;
 			dm-type = <0x2>;
 			need-awake;
-			max-freq = <0x2c6f00>;
+			max-freq = <0x2e0540>;
 			min-freq = <0x7ef40>;
 			pm_qos-min-class = <0x7>;
 			pm_qos-max-class = <0x8>;
@@ -9949,7 +9949,7 @@
 				mif-perf {
 					const-type = <0x0>;
 					dm-type = <0x3>;
-					table = <0x2c6f00 0x1fefc8 0x2ad8c0 0x1fefc8 0x29a810 0x1fefc8 0x27ac40 0x1fefc8 0x269ad0 0x1fefc8 0x25b070 0x1fefc8 0x23b4a0 0x1fefc8 0x221e60 0x1fefc8 0x1fbd00 0x0 0x1e26c0 0x0 0x1bc560 0x0 0x196400 0x0 0x17cdc0 0x0 0x163780 0x0 0x1506d0 0x0 0x130b00 0x0 0x1174c0 0x0 0xfde80 0x0 0xe4840 0x0 0xc7f38 0x0 0xb1bc0 0x0 0x98580 0x0 0x7ef40 0x0>;
+					table = <0x2e0540 0x2c6f00 0x2ad8c0 0x2e0540 0x1fefc8 0x2c6f00 0x1fefc8 0x2ad8c0 0x1fefc8 0x29a810 0x1fefc8 0x27ac40 0x1fefc8 0x269ad0 0x1fefc8 0x25b070 0x1fefc8  0x23b4a0 0x1fefc8 0x221e60 0x1fefc8 0x1fbd00 0x0 0x1e26c0 0x0 0x1bc560 0x0 0x196400 0x0 0x17cdc0 0x0 0x163780 0x0 0x1506d0 0x0 0x130b00 0x0 0x1174c0 0x0 0xfde80 0x0 0xe4840 0x0 0xc7f38  0x0 0xb1bc0 0x0 0x98580 0x0 0x7ef40 0x0>;
 				};
 
 				mif-skew {
@@ -10328,7 +10328,7 @@
 				};
 
 				big-switch-on {
-					temperature = <0xc3a0>;
+					temperature = <0xd6d8>;
 					hysteresis = <0x7d0>;
 					type = "active";
 					linux,phandle = <0x2d2>;
@@ -10336,7 +10336,7 @@
 				};
 
 				big-control-temp {
-					temperature = <0xea60>;
+					temperature = <0x14438>;
 					hysteresis = <0x1388>;
 					type = "passive";
 					linux,phandle = <0x10d>;
@@ -10344,7 +10344,7 @@
 				};
 
 				big-alert0 {
-					temperature = <0x111a0>;
+					temperature = <0x17318>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2d3>;
@@ -10352,7 +10352,7 @@
 				};
 
 				big-alert1 {
-					temperature = <0x138a0>;
+					temperature = <0x186a0>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2d4>;
@@ -10360,7 +10360,7 @@
 				};
 
 				big-alert2 {
-					temperature = <0x15fa0>;
+					temperature = <0x19a28>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2d5>;
@@ -10368,7 +10368,7 @@
 				};
 
 				big-alert3 {
-					temperature = <0x17358>;
+					temperature = <0x1adb0>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2d6>;
@@ -10419,7 +10419,7 @@
 				};
 
 				mid-switch-on {
-					temperature = <0xd6f8>;
+					temperature = <0xd6d8>;
 					hysteresis = <0x7d0>;
 					type = "active";
 					linux,phandle = <0x2da>;
@@ -10435,7 +10435,7 @@
 				};
 
 				mid-alert0 {
-					temperature = <0x17358>;
+					temperature = <0x17318>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2db>;
@@ -10443,7 +10443,7 @@
 				};
 
 				mid-alert1 {
-					temperature = <0x186f0>;
+					temperature = <0x186a0>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2dc>;
@@ -10451,7 +10451,7 @@
 				};
 
 				mid-alert2 {
-					temperature = <0x19a78>;
+					temperature = <0x19a28>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2dd>;
@@ -10459,7 +10459,7 @@
 				};
 
 				mid-alert3 {
-					temperature = <0x1adf0>;
+					temperature = <0x1adb0>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2de>;
