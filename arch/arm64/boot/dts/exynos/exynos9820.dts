@@ -9678,7 +9678,7 @@
 			emc_mode_0 {
 				mode_name = "QUAD";
 				cpus = "0-7";
-				max_freq = <0x1fbd00>;
+				max_freq = <0x269ad0>;
 				boost_cpus = "6-7";
 				change_latency = <0xf>;
 				enabled = <0x1>;
@@ -9688,7 +9688,7 @@
 				mode_name = "DUAL";
 				cpus = "0-3,6-7";
 				boost_cpus = "6-7";
-				max_freq = <0x23b4a0>;
+				max_freq = <0x29a810>;
 				change_latency = <0x1e>;
 				ldsum_thr = <0x4b0>;
 				enabled = <0x1>;
@@ -9699,7 +9699,7 @@
 				cpus = "0-3,6-7";
 				boost_cpus = [36 00];
 				cal-id = <0xb040004>;
-				max_freq = <0x29a810>;
+				max_freq = <0x2e0540>;
 				change_latency = <0x1e>;
 				enabled = <0x1>;
 			};
@@ -9939,7 +9939,7 @@
 			min-freq = <0x7ef40>;
 			pm_qos-min-class = <0x7>;
 			pm_qos-max-class = <0x8>;
-			pm_qos-booting = <0x1fbd00>;
+			pm_qos-booting = <0x25b070>;
 			#cooling-cells = <0x2>;
 			linux,phandle = <0x10e>;
 			phandle = <0x10e>;
