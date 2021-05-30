@@ -10336,7 +10336,7 @@
 				};
 
 				big-control-temp {
-					temperature = <0xea60>;
+					temperature = <0x13c68>;
 					hysteresis = <0x1388>;
 					type = "passive";
 					linux,phandle = <0x10d>;
@@ -10344,7 +10344,7 @@
 				};
 
 				big-alert0 {
-					temperature = <0x11180>;
+					temperature = <0x14ff0>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2d3>;
@@ -10352,7 +10352,7 @@
 				};
 
 				big-alert1 {
-					temperature = <0x13890>;
+					temperature = <0x16378>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2d4>;
@@ -10360,7 +10360,7 @@
 				};
 
 				big-alert2 {
-					temperature = <0x15f95>;
+					temperature = <0x17700>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2d5>;
@@ -10368,7 +10368,7 @@
 				};
 
 				big-alert3 {
-					temperature = <0x17338>;
+					temperature = <0x18a88>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2d6>;
@@ -10419,7 +10419,7 @@
 				};
 
 				mid-switch-on {
-					temperature = <0xd6e8>;
+					temperature = <0x14ff0>;
 					hysteresis = <0x7d0>;
 					type = "active";
 					linux,phandle = <0x2da>;
@@ -10427,7 +10427,7 @@
 				};
 
 				mid-control-temp {
-					temperature = <0x14438>;
+					temperature = <0x16378>;
 					hysteresis = <0x1388>;
 					type = "passive";
 					linux,phandle = <0x110>;
@@ -10435,7 +10435,7 @@
 				};
 
 				mid-alert0 {
-					temperature = <0x17338>;
+					temperature = <0x17700>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2db>;
@@ -10443,7 +10443,7 @@
 				};
 
 				mid-alert1 {
-					temperature = <0x186c0>;
+					temperature = <0x18a88>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2dc>;
@@ -10503,7 +10503,7 @@
 				};
 
 				little-alert1 {
-					temperature = <0x128e0>;
+					temperature = <0x16378>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x115>;
@@ -10511,7 +10511,7 @@
 				};
 
 				little-alert2 {
-					temperature = <0x13c68>;
+					temperature = <0x17700>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x116>;
@@ -10519,7 +10519,7 @@
 				};
 
 				little-alert3 {
-					temperature = <0x14ff0>;
+					temperature = <0x18a88>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x117>;
@@ -10527,7 +10527,7 @@
 				};
 
 				little-alert4 {
-					temperature = <0x16378>;
+					temperature = <0x18a88>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x118>;
@@ -10535,7 +10535,7 @@
 				};
 
 				little-alert5 {
-					temperature = <0x17700>;
+					temperature = <0x18a88>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x119>;
@@ -10637,7 +10637,7 @@
 				};
 
 				gpu-control-temp {
-					temperature = <0x157c0>;
+					temperature = <0x16378>;
 					hysteresis = <0x1388>;
 					type = "passive";
 					linux,phandle = <0x11d>;
