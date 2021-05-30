@@ -9696,7 +9696,7 @@
 
 			emc_mode_2 {
 				mode_name = "SINGLE";
-				cpus = "0-3,6-7";
+				cpus = "0-3,6";
 				boost_cpus = [36 00];
 				cal-id = <0xb040004>;
 				max_freq = <0x2e0540>;
