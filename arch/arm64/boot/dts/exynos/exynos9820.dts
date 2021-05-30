@@ -10328,7 +10328,7 @@
 				};
 
 				big-switch-on {
-					temperature = <0xc360>;
+					temperature = <0x16378>;
 					hysteresis = <0x7d0>;
 					type = "active";
 					linux,phandle = <0x2d2>;
@@ -10336,7 +10336,7 @@
 				};
 
 				big-control-temp {
-					temperature = <0x13c68>;
+					temperature = <0x16378>;
 					hysteresis = <0x1388>;
 					type = "passive";
 					linux,phandle = <0x10d>;
@@ -10344,7 +10344,7 @@
 				};
 
 				big-alert0 {
-					temperature = <0x14ff0>;
+					temperature = <0x16378>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2d3>;
@@ -10419,7 +10419,7 @@
 				};
 
 				mid-switch-on {
-					temperature = <0x14ff0>;
+					temperature = <0x16378>;
 					hysteresis = <0x7d0>;
 					type = "active";
 					linux,phandle = <0x2da>;
