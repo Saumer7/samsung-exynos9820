@@ -10443,7 +10443,7 @@
 				};
 
 				mid-alert1 {
-					temperature = <0x153d8;
+					temperature = <0x153d8>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2dc>;
