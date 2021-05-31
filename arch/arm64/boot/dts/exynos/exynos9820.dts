@@ -10511,7 +10511,7 @@
 				};
 
 				little-alert2 {
-					temperature = <0x14ff0>;
+					temperature = <0x18a88>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x116>;
