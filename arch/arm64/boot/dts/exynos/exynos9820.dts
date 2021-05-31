@@ -10427,7 +10427,7 @@
 				};
 
 				mid-control-temp {
-					temperature = <0x12cc8>;
+					temperature = <0x14438>;
 					hysteresis = <0x1388>;
 					type = "passive";
 					linux,phandle = <0x110>;
@@ -10435,7 +10435,7 @@
 				};
 
 				mid-alert0 {
-					temperature = <0x14050>;
+					temperature = <0x17318>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2db>;
@@ -10443,7 +10443,7 @@
 				};
 
 				mid-alert1 {
-					temperature = <0x153d8>;
+					temperature = <0x186a0>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2dc>;
@@ -10451,7 +10451,7 @@
 				};
 
 				mid-alert2 {
-					temperature = <0x16760>;
+					temperature = <0x19a28>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2dd>;
@@ -10459,7 +10459,7 @@
 				};
 
 				mid-alert3 {
-					temperature = <0x1add0>;
+					temperature = <0x1adb0>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x2de>;
