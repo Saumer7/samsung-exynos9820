@@ -10495,7 +10495,7 @@
 			trips {
 
 				little-alert0 {
-					temperature = <0xf230>;
+					temperature = <0x18a88>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x113>;
@@ -10503,7 +10503,7 @@
 				};
 
 				little-alert1 {
-					temperature = <0x105b8>;
+					temperature = <0x18a88>;
 					hysteresis = <0x1388>;
 					type = "active";
 					linux,phandle = <0x115>;
