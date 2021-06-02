@@ -10427,7 +10427,7 @@
 				};
 
 				mid-control-temp {
-					temperature = <0x14438>;
+					temperature = <0x17318>;
 					hysteresis = <0x1388>;
 					type = "passive";
 					linux,phandle = <0x110>;
