@@ -5237,8 +5237,8 @@
 		gpu_pmqos_mif_max_clock = <0x1ff3b0>;
 		gpu_pmqos_mif_max_clock_base = <0x9eb10>;
 		gpu_cl_dvfs_start_base = <0x5c0a8>;
-		gpu_debug_level = <0x3>;
-		gpu_trace_level = <0x8>;
+		gpu_debug_level = <0x0>;
+		gpu_trace_level = <0x0>;
 		gpu_mo_min_clock = <0x5c0a8>;
 		gpu_boost_gpu_min_lock = <0x0>;
 		gpu_boost_egl_min_lock = <0x1c9080>;
