@@ -3,7 +3,7 @@ name: Build
 on: [push]
 
 env:
-  TOOLCHAIN: cruel
+  TOOLCHAIN: google
   INSTALLER: yes
 
 jobs:
@@ -21,9 +21,9 @@ jobs:
         set -e -o pipefail
         ./cruelbuild config                    \
                      model=${{ matrix.model }} \
-                     name="Cruel-V3.9"         \
+                     name="Cruel-V3.10"        \
                      toolchain=$TOOLCHAIN      \
-                     +magisk=canary            \
+                     +magisk                   \
                      +nohardening              \
                      +ttl                      \
                      +wireguard                \
@@ -33,6 +33,7 @@ jobs:
                      +morosound                \
                      +boeffla_wl_blocker       \
                      +dtb                      \
+                     +dd                       \
         2>&1 | tee config.info
     - name: Install gcc-aarch64-linux-gnu
       if: env.TOOLCHAIN == 'system-gcc' || env.TOOLCHAIN == 'system-clang'
