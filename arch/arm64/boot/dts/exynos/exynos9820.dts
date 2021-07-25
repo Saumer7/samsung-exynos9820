@@ -5213,10 +5213,10 @@
 		gpu_pmu_status_local_pwr_mask = <0x1>;
 		gpu_max_clock = <0xab630>;
 		gpu_max_clock_limit = <0xab630>;
-		gpu_min_clock = <0x5c0a8>;
-		gpu_min_clock_limit = <0x5c0a8>;
-		gpu_dvfs_start_clock = <0x5c0a8>;
-		gpu_dvfs_bl_config_clock = <0x30d40>;
+		gpu_min_clock = <0x186a0>;
+		gpu_min_clock_limit = <0x186a0>;
+		gpu_dvfs_start_clock = <0x186a0>;
+		gpu_dvfs_bl_config_clock = <0x186a0>;
 		gpu_default_voltage = <0x0>;
 		gpu_cold_minimum_vol = <0x0>;
 		gpu_voltage_offset_margin = <0x927c>;
