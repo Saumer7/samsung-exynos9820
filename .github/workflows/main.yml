@@ -43,10 +43,6 @@ jobs:
                      +tcp_bbr                  \
                      +tcp_bic                  \
                      +tcp_htcp                 \
-                     +sched_performance        \
-                     +sched_conservative       \
-                     +sched_ondemand           \
-                     +performance              \
                      +nodebug                  \
                      +noksm                    \
                      +nomodules                \
