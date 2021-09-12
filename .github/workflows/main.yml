@@ -38,10 +38,6 @@ jobs:
                      +100hz                    \
                      +fp_boost                 \
                      +simple_lmk               \
-                     +tcp_westwood             \
-                     +tcp_cubic                \
-                     +tcp_bbr                  \
-                     +tcp_bic                  \
                      +tcp_htcp                 \
                      +nodebug                  \
                      +noksm                    \
@@ -49,6 +45,7 @@ jobs:
                      +noaudit                  \
                      +fake_config              \
                      +optoptopt                \
+                     +graphite                 \
                      
         2>&1 | tee config.info
     - name: Install gcc-aarch64-linux-gnu
