@@ -70,6 +70,7 @@ toolchain = {
         'LDGOLD': 'toolchain/bin/aarch64-linux-gnu-ld.gold',
         'LLVM_AR': 'toolchain/bin/llvm-ar',
         'LLVM_DIS': 'toolchain/bin/llvm-dis'
+    },
     'arter97': {
         'CROSS_COMPILE': 'toolchain/bin/aarch64-elf-'
     },
