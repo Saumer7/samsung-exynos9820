@@ -3,7 +3,7 @@ name: Build
 on: [push]
 
 env:
-  TOOLCHAIN: cruel
+  TOOLCHAIN: proton210213
   INSTALLER: yes
 
 jobs:
@@ -21,7 +21,7 @@ jobs:
         set -e -o pipefail
         ./cruelbuild config                    \
                      model=${{ matrix.model }} \
-                     name="Cruel-V3.9"         \
+                     name="Cruel-V3.10"        \
                      toolchain=$TOOLCHAIN      \
                      +magisk=canary            \
                      +nohardening              \
@@ -33,6 +33,27 @@ jobs:
                      +morosound                \
                      +boeffla_wl_blocker       \
                      +dtb                      \
+                     +noatime                  \
+                     +always_permit            \
+                     +100hz                    \
+                     +fp_boost                 \
+                     +simple_lmk               \
+                     +tcp_westwood             \
+                     +tcp_cubic                \
+                     +tcp_bbr                  \
+                     +tcp_bic                  \
+                     +tcp_htcp                 \
+                     +sched_performance        \
+                     +sched_conservative       \
+                     +sched_ondemand           \
+                     +performance              \
+                     +nodebug                  \
+                     +noksm                    \
+                     +nomodules                \
+                     +noaudit                  \
+                     +fake_config              \
+                     +optoptopt                \
+                     
         2>&1 | tee config.info
     - name: Install gcc-aarch64-linux-gnu
       if: env.TOOLCHAIN == 'system-gcc' || env.TOOLCHAIN == 'system-clang'
@@ -46,7 +67,7 @@ jobs:
       run: sudo apt-get install -y -qq llvm lld clang
     - name: Deploy Toolchain
       if: env.TOOLCHAIN != 'system-gcc' && env.TOOLCHAIN != 'system-clang'
-      run: git clone --depth 1 -j $(nproc) --branch $TOOLCHAIN --single-branch https://github.com/CruelKernel/samsung-exynos9820-toolchain toolchain
+      run: git clone --depth 1 -j $(nproc) --branch $TOOLCHAIN --single-branch https://github.com/Saumer7/samsung-exynos9820-toolchain toolchain
     - name: Kernel Build
       run: ./cruelbuild :build
     - name: Install mkbootimg
