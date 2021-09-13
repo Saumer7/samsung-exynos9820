@@ -23,29 +23,6 @@ jobs:
                      model=${{ matrix.model }} \
                      name="Cruel-V3.10"        \
                      toolchain=$TOOLCHAIN      \
-                     +magisk=canary            \
-                     +nohardening              \
-                     +ttl                      \
-                     +wireguard                \
-                     +cifs                     \
-                     +sdfat                    \
-                     +ntfs                     \
-                     +morosound                \
-                     +boeffla_wl_blocker       \
-                     +dtb                      \
-                     +noatime                  \
-                     +always_permit            \
-                     +100hz                    \
-                     +fp_boost                 \
-                     +simple_lmk               \
-                     +tcp_htcp                 \
-                     +nodebug                  \
-                     +noksm                    \
-                     +nomodules                \
-                     +noaudit                  \
-                     +fake_config              \
-                     +optoptopt                \
-                     +graphite                 \
                      
         2>&1 | tee config.info
     - name: Install gcc-aarch64-linux-gnu
