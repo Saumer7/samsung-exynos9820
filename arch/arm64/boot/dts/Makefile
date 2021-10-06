@@ -1,53 +1,77 @@
 # SPDX-License-Identifier: GPL-2.0
+dtb-y += exynos/exynos9820.dtb
 
-ifdef CONFIG_MODEL_G970F
-include arch/arm64/boot/dts/G970F.mk
-endif
+dtbo-y += samsung/exynos9820-beyond0lte_eur_open_24.dtbo
+dtbo-y += samsung/exynos9820-beyond0lte_eur_open_22.dtbo
+dtbo-y += samsung/exynos9820-beyond0lte_eur_open_19.dtbo
+dtbo-y += samsung/exynos9820-beyond0lte_eur_open_18.dtbo
+dtbo-y += samsung/exynos9820-beyond0lte_eur_open_17.dtbo
+dtbo-y += samsung/exynos9820-beyond0lte_eur_open_20.dtbo
+dtbo-y += samsung/exynos9820-beyond0lte_eur_open_25.dtbo
 
-ifdef CONFIG_MODEL_G970N
-include arch/arm64/boot/dts/G970N.mk
-endif
+dtbo-y += samsung/exynos9820-beyond1lte_eur_open_18.dtbo
+dtbo-y += samsung/exynos9820-beyond1lte_eur_open_19.dtbo
+dtbo-y += samsung/exynos9820-beyond1lte_eur_open_20.dtbo
+dtbo-y += samsung/exynos9820-beyond1lte_eur_open_26.dtbo
+dtbo-y += samsung/exynos9820-beyond1lte_eur_open_21.dtbo
+dtbo-y += samsung/exynos9820-beyond1lte_eur_open_23.dtbo
+dtbo-y += samsung/exynos9820-beyond1lte_eur_open_24.dtbo
+dtbo-y += samsung/exynos9820-beyond1lte_eur_open_17.dtbo
+dtbo-y += samsung/exynos9820-beyond1lte_eur_open_22.dtbo
 
-ifdef CONFIG_MODEL_G973F
-include arch/arm64/boot/dts/G973F.mk
-endif
+dtbo-y += samsung/exynos9820-beyond2lte_eur_open_16.dtbo
+dtbo-y += samsung/exynos9820-beyond2lte_eur_open_17.dtbo
+dtbo-y += samsung/exynos9820-beyond2lte_eur_open_19.dtbo
+dtbo-y += samsung/exynos9820-beyond2lte_eur_open_23.dtbo
+dtbo-y += samsung/exynos9820-beyond2lte_eur_open_26.dtbo
+dtbo-y += samsung/exynos9820-beyond2lte_eur_open_18.dtbo
+dtbo-y += samsung/exynos9820-beyond2lte_eur_open_24.dtbo
+dtbo-y += samsung/exynos9820-beyond2lte_eur_open_04.dtbo
+dtbo-y += samsung/exynos9820-beyond2lte_eur_open_20.dtbo
+dtbo-y += samsung/exynos9820-beyond2lte_eur_open_25.dtbo
 
-ifdef CONFIG_MODEL_G973N
-include arch/arm64/boot/dts/G973N.mk
-endif
+dtbo-y += samsung/exynos9820-beyondx_eur_open_00.dtbo
+dtbo-y += samsung/exynos9820-beyondx_eur_open_08.dtbo
+dtbo-y += samsung/exynos9820-beyondx_eur_open_04.dtbo
+dtbo-y += samsung/exynos9820-beyondx_eur_open_06.dtbo
+dtbo-y += samsung/exynos9820-beyondx_eur_open_01.dtbo
+dtbo-y += samsung/exynos9820-beyondx_eur_open_05.dtbo
+dtbo-y += samsung/exynos9820-beyondx_eur_open_02.dtbo
+dtbo-y += samsung/exynos9820-beyondx_eur_open_07.dtbo
+dtbo-y += samsung/exynos9820-beyondx_eur_open_03.dtbo
 
-ifdef CONFIG_MODEL_G975F
-include arch/arm64/boot/dts/G975F.mk
-endif
+dtbo-y += samsung/exynos9820-d1_eur_open_23.dtbo
+dtbo-y += samsung/exynos9820-d1_eur_open_21.dtbo
+dtbo-y += samsung/exynos9820-d1_eur_open_22.dtbo
+dtbo-y += samsung/exynos9820-d1_eur_open_18.dtbo
+dtbo-y += samsung/exynos9820-d1_eur_open_19.dtbo
 
-ifdef CONFIG_MODEL_G975N
-include arch/arm64/boot/dts/G975N.mk
-endif
+dtbo-y += samsung/exynos9820-d2_eur_open_19.dtbo
+dtbo-y += samsung/exynos9820-d2_eur_open_18.dtbo
+dtbo-y += samsung/exynos9820-d2_eur_open_17.dtbo
+dtbo-y += samsung/exynos9820-d2_eur_open_24.dtbo
+dtbo-y += samsung/exynos9820-d2_eur_open_02.dtbo
+dtbo-y += samsung/exynos9820-d2_eur_open_22.dtbo
+dtbo-y += samsung/exynos9820-d2_eur_open_16.dtbo
+dtbo-y += samsung/exynos9820-d2_eur_open_21.dtbo
+dtbo-y += samsung/exynos9820-d2_eur_open_23.dtbo
+dtbo-y += samsung/exynos9820-d2_eur_open_20.dtbo
 
-ifdef CONFIG_MODEL_G977B
-include arch/arm64/boot/dts/G977B.mk
-endif
+dtbo-y += samsung/exynos9820-d2x_eur_open_20.dtbo
+dtbo-y += samsung/exynos9820-d2x_eur_open_19.dtbo
+dtbo-y += samsung/exynos9820-d2x_eur_open_17.dtbo
+dtbo-y += samsung/exynos9820-d2x_eur_open_24.dtbo
+dtbo-y += samsung/exynos9820-d2x_eur_open_16.dtbo
+dtbo-y += samsung/exynos9820-d2x_eur_open_21.dtbo
+dtbo-y += samsung/exynos9820-d2x_eur_open_02.dtbo
+dtbo-y += samsung/exynos9820-d2x_eur_open_18.dtbo
+dtbo-y += samsung/exynos9820-d2x_eur_open_22.dtbo
+dtbo-y += samsung/exynos9820-d2x_eur_open_23.dtbo
 
-ifdef CONFIG_MODEL_G977N
-include arch/arm64/boot/dts/G977N.mk
-endif
+targets += dtbs
+DTB_LIST  := $(dtb-y) $(dtbo-y)
+always    := $(DTB_LIST)
 
-ifdef CONFIG_MODEL_N970F
-include arch/arm64/boot/dts/N970F.mk
-endif
+dtbs: $(addprefix $(obj)/, $(DTB_LIST))
 
-ifdef CONFIG_MODEL_N971N
-include arch/arm64/boot/dts/N971N.mk
-endif
-
-ifdef CONFIG_MODEL_N975F
-include arch/arm64/boot/dts/N975F.mk
-endif
-
-ifdef CONFIG_MODEL_N976B
-include arch/arm64/boot/dts/N976B.mk
-endif
-
-ifdef CONFIG_MODEL_N976N
-include arch/arm64/boot/dts/N976N.mk
-endif
+clean-files := *.dtb*
