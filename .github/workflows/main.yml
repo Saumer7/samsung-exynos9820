@@ -23,28 +23,8 @@ jobs:
                      model=${{ matrix.model }} \
                      name="CruelV3.10experi"   \
                      toolchain=$TOOLCHAIN      \
-                     +magisk=canary            \
+                     -magisk                   \
                      +dtb                      \
-                     +always_permit            \
-                     +fp_boost                 \
-                     +noatime                  \
-                     +simple_lmk               \
-                     +performance              \
-                     +nodebug                  \
-                     +nomodules                \
-                     +noaudit                  \
-                     +fake_config              \
-                     +nohardening              \
-                     +ttl                      \
-                     +wireguard                \
-                     +cifs                     \
-                     +sdfat                    \
-                     +ntfs                     \
-                     +morosound                \
-                     +boeffla_wl_blocker       \
-                     +graphite                 \
-                     +200hz                    \
-                     +optoptopt                \
         2>&1 | tee config.info
     - name: Install gcc-aarch64-linux-gnu
       if: env.TOOLCHAIN == 'system-gcc' || env.TOOLCHAIN == 'system-clang'
